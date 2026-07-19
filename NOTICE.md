@@ -1,9 +1,12 @@
-# Notice
+# 项目说明
 
-Copyright © 2026 xiaochen08. All rights reserved unless a separate license is added later.
+Copyright © 2026 xiaochen08. All rights reserved.
 
-“方界造模”是本项目的品牌展示名，技术调用名为 `create-blockbench-minecraft-models`。
+大白话说明：
 
-Minecraft is a trademark of Microsoft Corporation. Blockbench is a separate third-party product. This repository is an independent community project and is not affiliated with, endorsed by, or sponsored by Mojang, Microsoft, or Blockbench.
+- 这个仓库目前没有附带开源许可证；
+- 没有单独获得允许时，请不要直接复制、重新发布或拿去商业使用；
+- Minecraft、Mojang、Microsoft、Blockbench 以及文中提到的其他名称归各自权利人所有；
+- 本项目是社区制作的 Codex Skill，不代表任何官方产品或合作关系。
 
-本仓库公开可见不等于授予复制、修改、再分发或商业使用权。参考图片、模型、音频、字体、插件和其他第三方内容仍受其各自权利与许可约束。
+如果以后加入正式许可证，以许可证文件写明的内容为准。
