@@ -1,9 +1,9 @@
 ---
-name: create-blockbench-minecraft-models
-description: "Use when creating, revising, texturing, animating, sonifying, exporting, or validating Minecraft Blockbench .bbmodel assets: entities, weapons, items, machines, furniture, structures, vehicles, or environments."
+name: fjzm
+description: "Use when users ask for 方界造模 or FJZM, or when creating, revising, texturing, animating, sonifying, exporting, or validating Minecraft Blockbench .bbmodel assets: entities, weapons, items, machines, furniture, structures, vehicles, or environments."
 ---
 
-# Create Blockbench Minecraft Models
+# 方界造模（FJZM）
 
 ## Category routing
 

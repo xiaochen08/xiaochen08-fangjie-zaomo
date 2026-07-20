@@ -1,4 +1,4 @@
 interface:
-  display_name: "Create Blockbench Minecraft Models"
-  short_description: "Create verified Minecraft models with animation, effects, audio, and shader gates"
-  default_prompt: "Use $create-blockbench-minecraft-models to ask my Windows drive/root, create one approved folder per model, confirm Mod route, related assets, damage scope, and shader/lighting targets before imagegen, show A/B/C sheets for selection, then require contracts and runtime evidence before model, shader, or release claims."
+  display_name: "方界造模 FJZM"
+  short_description: "Minecraft 模型、动画、粒子、音效与光影全流程生产"
+  default_prompt: "使用 $fjzm 为我制作 Minecraft 模型：先确认保存位置、Mod 路线、配套资产、损毁与光影需求，提供 A/B/C 三套方案并等我批准，再正式生产和验证。"

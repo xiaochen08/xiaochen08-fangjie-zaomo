@@ -6,6 +6,36 @@
 - 次版本：加入新的完整能力或生产门槛；
 - 修订版本：修复错误、补充校验或改善文字。
 
+## 2.0.0 - 2026-07-20
+
+### 正式命名
+
+- 正式中文名修改为“方界造模”。
+- 品牌缩写统一为大写 `FJZM`。
+- Skill 机器调用名由 `$create-blockbench-minecraft-models` 修改为 `$fjzm`。
+- `agents/openai.yaml` 的界面显示名修改为“方界造模 FJZM”。
+- `SKILL.md` 的正式标题修改为“方界造模（FJZM）”。
+
+### 为什么调用名是小写
+
+Skill 的内部名称只允许小写字母、数字和连字符，因此品牌可以写 `FJZM`，但对话调用必须写 `$fjzm`。直接把 YAML 名称写成大写 `FJZM` 会违反 Skill 格式规范，可能导致无法安装或无法识别。
+
+### 升级影响
+
+这是一次破坏性调用名变更，所以版本升级为 2.0.0。模型、动画、粒子、音效、光影兼容和 Mod 接入能力没有删除，但旧调用方式不再是正式入口。
+
+重新安装：
+
+```powershell
+python -X utf8 "$env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" --repo xiaochen08/MC-FJZM --path . --name fjzm
+```
+
+重启 Codex 后使用：
+
+```text
+$fjzm
+```
+
 ## 1.2.0 - 2026-07-20
 
 ### 核心变化
@@ -93,7 +123,7 @@
 重新安装仓库中的 Skill，然后重启 Codex：
 
 ```powershell
-python -X utf8 "$env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" --repo xiaochen08/MC-FJZM --path . --name create-blockbench-minecraft-models
+python -X utf8 "$env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" --repo xiaochen08/MC-FJZM --path . --name fjzm
 ```
 
 ## 1.0.0 - 2026-07-19

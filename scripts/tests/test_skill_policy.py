@@ -3,6 +3,7 @@ from pathlib import Path
 
 
 SKILL_MD = Path(__file__).resolve().parents[2] / "SKILL.md"
+AGENT_CONFIG = Path(__file__).resolve().parents[2] / "agents" / "openai.yaml"
 MODEL_BRIEF = Path(__file__).resolve().parents[2] / "references" / "model-brief.md"
 QUALITY_GATES = Path(__file__).resolve().parents[2] / "references" / "quality-gates.md"
 CONCEPT_PROMPT = Path(__file__).resolve().parents[2] / "references" / "concept-prompt.md"
@@ -25,6 +26,25 @@ MODEL_FIRST_RUNTIME_GATE = Path(__file__).resolve().parents[2] / "references" / 
 RUNTIME_CONTRACT_VALIDATOR = Path(__file__).resolve().parents[1] / "validate_runtime_contract.py"
 SHADER_COMPATIBILITY = Path(__file__).resolve().parents[2] / "references" / "shader-compatibility.md"
 SHADER_CONTRACT_VALIDATOR = Path(__file__).resolve().parents[1] / "validate_shader_contract.py"
+
+
+class OfficialIdentityPolicyTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.skill = SKILL_MD.read_text(encoding="utf-8")
+        cls.agent = AGENT_CONFIG.read_text(encoding="utf-8")
+
+    def test_machine_call_name_is_fjzm(self):
+        self.assertIn("name: fjzm", self.skill)
+        self.assertNotIn("name: create-blockbench-minecraft-models", self.skill)
+
+    def test_official_chinese_display_name_is_fangjie_zaomo(self):
+        self.assertIn("# 方界造模（FJZM）", self.skill)
+        self.assertIn('display_name: "方界造模 FJZM"', self.agent)
+
+    def test_default_prompt_uses_new_call_name(self):
+        self.assertIn("$fjzm", self.agent)
+        self.assertNotIn("$create-blockbench-minecraft-models", self.agent)
 
 
 class ApprovalGatePolicyTests(unittest.TestCase):

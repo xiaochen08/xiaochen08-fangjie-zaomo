@@ -2,7 +2,9 @@
 
 > **让你不会 Blockbench，也能把脑子里的 Minecraft 模型一步步做出来。Enjoy! ✨**
 
-**当前版本：v1.2.0｜发布日期：2026-07-20**
+**正式名称：方界造模｜品牌缩写：FJZM｜调用名：`$fjzm`**
+
+**当前版本：v2.0.0｜发布日期：2026-07-20**
 
 [🌐 打开可视化使用说明](https://xiaochen08.github.io/MC-FJZM/) · [📖 看详细教程](docs/USER_GUIDE.md) · [🧭 看完整流程](docs/WORKFLOW.md) · [🗓️ 查看更新日志](CHANGELOG.md)
 
@@ -15,15 +17,17 @@
 在 Windows PowerShell 中执行：
 
 ~~~powershell
-python -X utf8 "$env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" --repo xiaochen08/MC-FJZM --path . --name create-blockbench-minecraft-models
+python -X utf8 "$env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" --repo xiaochen08/MC-FJZM --path . --name fjzm
 ~~~
 
 安装完成后重启 Codex，然后直接说：
 
 ~~~text
-使用 $create-blockbench-minecraft-models 帮我制作一个 Minecraft Java 模型。
+使用 $fjzm 帮我制作一个 Minecraft Java 模型。
 先询问需求并生成三套方案图，没有得到我的明确批准前不要正式建模。
 ~~~
+
+> Skill 机器名只能使用小写字母、数字和连字符，因此品牌写作 **FJZM**，正式调用写作 **`$fjzm`**。
 
 Skill 本体包含：
 
@@ -35,7 +39,18 @@ Skill 本体包含：
 | [scripts](scripts) | 模型、音频、项目与交付验证脚本 |
 | [scripts/tests](scripts/tests) | 自动化测试 |
 
-## v1.2.0 重点更新：先锁定光影目标，再画材质
+## v2.0.0 重点更新：正式更名为“方界造模 FJZM”
+
+- 正式中文名：**方界造模**；
+- 品牌缩写：**FJZM**；
+- 新调用名：**`$fjzm`**；
+- 原调用名 `$create-blockbench-minecraft-models` 停止作为正式入口；
+- GitHub 仓库地址保持不变，安装时将 `--name` 改为 `fjzm`；
+- 工作流、光影系统、动画、粒子、音效、Mod 接入与验证能力全部保留。
+
+[查看 v2.0.0 迁移说明](CHANGELOG.md#200---2026-07-20)
+
+## v1.2.0：先锁定光影目标，再画材质
 
 开启光影以后，模型是否自然，不取决于一句“支持光影”，而取决于基础贴图、发光遮罩、PBR 通道、透明层、渲染器、光影包版本和实际进游戏测试是否一致。
 

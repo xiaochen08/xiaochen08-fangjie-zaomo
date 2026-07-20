@@ -11,8 +11,10 @@
 如果你的环境支持技能名，也可以明确写：
 
 ~~~text
-$create-blockbench-minecraft-models
+$fjzm
 ~~~
+
+正式中文名是“方界造模”，品牌缩写是 `FJZM`。由于 Skill 调用名必须使用小写字符，所以在对话中调用时写 `$fjzm`。
 
 ## 第一次怎么说最省事？
 
