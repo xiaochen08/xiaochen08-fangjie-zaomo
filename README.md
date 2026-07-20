@@ -2,23 +2,48 @@
 
 > **让你不会 Blockbench，也能把脑子里的 Minecraft 模型一步步做出来。Enjoy! ✨**
 
-**正式名称：方界造模｜品牌缩写：FJZM｜调用名：`$fjzm`**
+**正式名称：方界造模｜品牌缩写：FJZM｜主调用名：`$fjzm`｜动画专修：`$fjzm-animation`**
 
-**当前版本：v2.0.0｜发布日期：2026-07-20**
+**当前版本：v3.0.0｜发布日期：2026-07-20**
 
 [🌐 打开可视化使用说明](https://xiaochen08.github.io/MC-FJZM/) · [📖 看详细教程](docs/USER_GUIDE.md) · [🧭 看完整流程](docs/WORKFLOW.md) · [🗓️ 查看更新日志](CHANGELOG.md)
 
+使用 WorkBuddy：下载同一个套件 ZIP，再按 [WorkBuddy 导入说明](docs/WORKBUDDY.md) 依次导入里面的两个技能包。
+
 ---
 
-## 安装 Skill
+## 一次安装完整套件
 
-这个仓库根目录就是可安装的 Skill，核心入口为 [SKILL.md](SKILL.md)。
+v3.0.0 不再只发一个孤立的大 Skill。正式套件同时包含：
+
+- [`$fjzm`](skills/fjzm/SKILL.md)：需求、方案图、模型、贴图、光影、粒子、音效、Mod 接入和最终验收的总负责人；
+- [`$fjzm-animation`](skills/fjzm-animation/SKILL.md)：只负责骨骼、动画生产、Blockbench 预览、诊断和返修。
+
+主 Skill 发现需要动画时必须调用动画工坊；动画工坊完成后必须把 `animation-result.json` 交回主 Skill，之后才能绑定粒子、音效、碰撞、能量弹和 Mod 控制器。缺少任意一个 Skill，动画生产都会停止，避免半套流程继续乱做。
+
+### 方法一：一条命令安装两个 Skill
 
 在 Windows PowerShell 中执行：
 
 ~~~powershell
-python -X utf8 "$env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" --repo xiaochen08/MC-FJZM --path . --name fjzm
+python -X utf8 "$env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" --repo xiaochen08/MC-FJZM --ref v3.0.0 --path skills/fjzm skills/fjzm-animation
 ~~~
+
+### 方法二：一个 ZIP 离线安装
+
+下载 Release 里的 `fjzm-suite-v3.0.0.zip`，解压后在该目录运行：
+
+~~~powershell
+.\Install-FJZMSuite.ps1
+~~~
+
+如果电脑里已经装过旧版，使用：
+
+~~~powershell
+.\Install-FJZMSuite.ps1 -BackupAndReplace
+~~~
+
+脚本会先做完整性检查，再同时更新两个 Skill，并保留带日期的旧版备份；如果只发现其中一个，脚本会拒绝继续，防止半套安装。
 
 安装完成后重启 Codex，然后直接说：
 
@@ -33,11 +58,24 @@ Skill 本体包含：
 
 | 目录 | 作用 |
 |---|---|
-| [SKILL.md](SKILL.md) | Codex 识别和执行的主入口 |
-| [agents/openai.yaml](agents/openai.yaml) | 技能名称、简介和默认提示 |
-| [references](references) | 模型、动画、粒子、音效、Mod 和交付规则 |
-| [scripts](scripts) | 模型、音频、项目与交付验证脚本 |
-| [scripts/tests](scripts/tests) | 自动化测试 |
+| [.codex-plugin/plugin.json](.codex-plugin/plugin.json) | 同时注册两个 Skill 的插件清单 |
+| [skills/fjzm](skills/fjzm) | 方界造模主 Skill 完整本体 |
+| [skills/fjzm-animation](skills/fjzm-animation) | 动画工坊子 Skill 完整本体 |
+| [Install-FJZMSuite.ps1](Install-FJZMSuite.ps1) | Windows 成套安装与安全更新脚本 |
+| [SKILL.md](SKILL.md) | 为旧安装方式保留的主 Skill 兼容入口 |
+
+## v3.0.0 重点更新：动画工坊与主 Skill 正式绑定
+
+- 新增独立调用名 **`$fjzm-animation`**；
+- 支持主流程委派新动画，也支持用户单独调用它返修现有动画；
+- 返修前先诊断 timing、关键姿势、插值、旋转中心和穿模距离，再让用户批准修改方案；
+- 用 `project_id + asset_id + asset_version + model_sha256 + rig_signature` 锁死目标，避免多模型串档；
+- 原 `.bbmodel` 永远只读，动画只写带版本的新副本；
+- 几何、UV、纹理或骨骼拓扑需要变化时，必须退回主 Skill 重新批准；
+- 动画结果返回前，禁止提前绑定粒子、音效、碰撞、投射物和 Mod 逻辑；
+- GitHub 插件和离线 ZIP 都把两个 Skill 放在同一个发行包里。
+
+[查看 v3.0.0 完整更新内容](CHANGELOG.md#300---2026-07-20)
 
 ## v2.0.0 重点更新：正式更名为“方界造模 FJZM”
 

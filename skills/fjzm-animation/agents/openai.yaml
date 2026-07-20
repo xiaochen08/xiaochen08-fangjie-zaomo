@@ -1,0 +1,4 @@
+interface:
+  display_name: "方界造模·动画工坊"
+  short_description: "专门生成、绑定、预览、诊断和优化 Blockbench 动画"
+  default_prompt: "使用 $fjzm-animation 优化这个 Minecraft Blockbench 模型的动画，只修改获批范围并保留可回退版本。"

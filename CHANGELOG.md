@@ -6,6 +6,40 @@
 - 次版本：加入新的完整能力或生产门槛；
 - 修订版本：修复错误、补充校验或改善文字。
 
+## 3.0.0 - 2026-07-20
+
+### 新增动画专修 Skill
+
+- 新增 `fjzm-animation`，正式调用名为 `$fjzm-animation`。
+- 主 Skill `$fjzm` 继续负责需求、概念审批、模型身份、材质、光影、粒子、音效、Mod 接入和最终发布。
+- 动画工坊负责骨骼绑定、动画生产、实际 Blockbench 预览、问题诊断和动画返修。
+- 支持 `delegated production`、`standalone revision` 和经过主流程批准的 `delegated_rig_and_animation` 三种工作模式。
+
+### 防串模型与防误改合同
+
+- 新增 `animation-handoff.json`，强制锁定 `project_id`、`asset_id`、`asset_version`、`model_sha256`、`model_spec_sha256` 和 `rig_signature`。
+- 新增 `validate_animation_handoff.py`，自动检查路径越界、哈希不一致、目标模型错误、未授权改动、写入者冲突和审批缺失。
+- 原始 `.bbmodel` 只读；每次动画修改都输出新版本，禁止覆盖源模型。
+- 同一版本只能有一个动画写入者，避免主 Skill、子 Skill 或多个 Blockbench 会话互相覆盖。
+- standalone 返修禁止修改几何、UV、纹理、骨骼名称、层级、定位器和骨骼拓扑。
+
+### 主从交接与事件顺序
+
+- 动画工坊必须返回 `animation-result.json`，记录输入/输出哈希、骨骼签名变化、修改过的动画和事件、验证证据及重绑要求。
+- 返回结果前，主 Skill 禁止把变化后的骨骼绑定到粒子、音效、碰撞、能量弹或 Mod 控制器。
+- 如果需要几何或骨骼拓扑变化，必须回到 `$fjzm` 重新取得用户批准并重建交接合同。
+
+### 成套发行
+
+- 新增 `.codex-plugin/plugin.json`，插件一次发现 `$fjzm` 和 `$fjzm-animation`。
+- GitHub 正式源位于 `skills/fjzm` 与 `skills/fjzm-animation`。
+- 新增 `Install-FJZMSuite.ps1`，Windows 下同时安装或同时更新两个 Skill；检测到半套安装会拒绝继续。
+- 新增单一离线发行包 `fjzm-suite-v3.0.0.zip`，其中包含两个 Skill、插件清单、安装器和分别可导入的 WorkBuddy 子 ZIP。
+
+### 升级影响
+
+这是工作流架构变化，因此升级主版本到 3.0.0。旧 `$fjzm` 仍可识别，但正式动画生产必须同时安装 `$fjzm-animation`。
+
 ## 2.0.0 - 2026-07-20
 
 ### 正式命名

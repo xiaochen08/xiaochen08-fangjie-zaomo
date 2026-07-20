@@ -1,0 +1,4 @@
+interface:
+  display_name: "方界造模 FJZM"
+  short_description: "Minecraft 模型、动画、粒子、音效与光影全流程生产"
+  default_prompt: "使用 $fjzm 为我制作 Minecraft 模型：先确认保存位置、Mod 路线、配套资产、损毁与光影需求，提供 A/B/C 三套方案并等我批准，再正式生产和验证。"

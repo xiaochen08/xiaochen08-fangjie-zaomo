@@ -1,0 +1,26 @@
+{
+  "name": "fjzm-suite",
+  "version": "3.0.0",
+  "description": "方界造模主流程与动画工坊子技能的完整 Minecraft Blockbench 建模套件。",
+  "author": {
+    "name": "xiaochen08",
+    "url": "https://github.com/xiaochen08"
+  },
+  "homepage": "https://github.com/xiaochen08/MC-FJZM",
+  "repository": "https://github.com/xiaochen08/MC-FJZM",
+  "keywords": ["minecraft", "blockbench", "modeling", "animation", "mod"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "方界造模 FJZM 套件",
+    "shortDescription": "建模主流程与动画专修一起安装、严格交接。",
+    "longDescription": "先由方界造模锁定需求、模型身份与用户审批，再由动画工坊完成骨骼、动画和返修，最后回到主流程绑定粒子、音效与 Mod。",
+    "developerName": "xiaochen08",
+    "category": "Developer Tools",
+    "capabilities": ["Minecraft Blockbench modeling", "Animation revision", "Mod integration"],
+    "defaultPrompt": [
+      "使用 $fjzm 从需求确认开始制作一个 Minecraft 模型。",
+      "使用 $fjzm-animation 诊断并优化这个 Blockbench 动画。"
+    ],
+    "brandColor": "#00D8FF"
+  }
+}
