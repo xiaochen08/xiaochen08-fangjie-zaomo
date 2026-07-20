@@ -2,9 +2,15 @@
 
 Use this contract after `asset-bundle.json` passes. It records what was actually integrated and tested; it is not permission to modify an unspecified project.
 
+For a model-first bundle, load and validate `runtime-contract.json` first. Compare its provisional/locked target profile with the read-only project inspection. Record every mismatch; do not silently rename bones, animations, events, locators, textures, or asset identity.
+
+Before writing adapters, create `integration-map.json` that maps the stable model contract to actual runtime owners: resource/model paths, renderer and model layer, block/entity/block-entity/projectile registration, animation controller/state, server-owned gameplay event, client particle/audio event, networking/synchronization field, collision/hitbox, persistence, and save/load behavior. Missing owners remain blockers.
+
 ## Safe scaffold
 
 First run `scripts/inspect_runtime_project.py` against the authorized project and preserve its project inspection report. Do not type version fields from memory. Conflicting or missing evidence blocks adapter selection and verified support.
+
+If the inspected project differs from the provisional Minecraft version, loader, mappings, animation runtime, or render path, produce a migration impact report and obtain approval before changing the source model or rig. Prefer an adapter-layer change when the approved source can remain stable.
 
 Create a dry-run JSON first:
 

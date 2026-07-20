@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import re
 import sys
@@ -68,6 +69,18 @@ def _collect_named_values(value: Any, name: str) -> set[str]:
         for child in value:
             found.update(_collect_named_values(child, name))
     return found
+
+
+def _validate_runtime_contract_payload(payload: dict[str, Any]) -> dict[str, list[str]]:
+    script = Path(__file__).with_name("validate_runtime_contract.py")
+    if not script.is_file():
+        return {"errors": ["validate_runtime_contract.py is missing"], "warnings": []}
+    spec = importlib.util.spec_from_file_location("bundle_runtime_contract_validator", script)
+    if spec is None or spec.loader is None:
+        return {"errors": ["cannot load validate_runtime_contract.py"], "warnings": []}
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.validate_contract(payload)
 
 
 def _validate_evidence(items: Any, errors: list[str]) -> None:
@@ -148,8 +161,22 @@ def validate_bundle(manifest: dict[str, Any], bundle_root: Path | str) -> dict[s
                 embedded_rig = payload.get("rig_signature")
                 if embedded_rig is None and isinstance(payload.get("animation_system"), dict):
                     embedded_rig = payload["animation_system"].get("rig_signature")
+                if embedded_rig is None and isinstance(payload.get("stable_contract"), dict):
+                    embedded_rig = payload["stable_contract"].get("rig_signature")
                 if embedded_rig is not None and embedded_rig != rig_signature:
                     errors.append(f"{label} rig signature mismatch")
+
+    model_spec = json_resources.get("model-spec.json", {})
+    route_choice = None
+    if isinstance(model_spec, dict) and isinstance(model_spec.get("mod_project"), dict):
+        route_choice = model_spec["mod_project"].get("route_choice")
+    runtime_contract = json_resources.get("runtime-contract.json")
+    if route_choice == "model_first" and not isinstance(runtime_contract, dict):
+        errors.append("model_first bundle requires runtime-contract.json")
+    if isinstance(runtime_contract, dict):
+        runtime_result = _validate_runtime_contract_payload(runtime_contract)
+        errors.extend(f"runtime-contract.json: {message}" for message in runtime_result["errors"])
+        warnings.extend(f"runtime-contract.json: {message}" for message in runtime_result["warnings"])
 
     event_table = json_resources.get("animation-events.json", {})
     sound_targets = _collect_named_values(json_resources.get("audio-manifest.json", {}), "event_id")

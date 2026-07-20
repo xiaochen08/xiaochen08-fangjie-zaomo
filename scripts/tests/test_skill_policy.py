@@ -21,6 +21,8 @@ PROJECT_INTEGRATION = Path(__file__).resolve().parents[2] / "references" / "proj
 MOD_PROJECT_BOOTSTRAP = Path(__file__).resolve().parents[2] / "references" / "mod-project-bootstrap.md"
 ASSET_ECOSYSTEM = Path(__file__).resolve().parents[2] / "references" / "asset-ecosystem.md"
 ASSET_WORKSPACE = Path(__file__).resolve().parents[2] / "references" / "asset-workspace.md"
+MODEL_FIRST_RUNTIME_GATE = Path(__file__).resolve().parents[2] / "references" / "model-first-runtime-gate.md"
+RUNTIME_CONTRACT_VALIDATOR = Path(__file__).resolve().parents[1] / "validate_runtime_contract.py"
 
 
 class ApprovalGatePolicyTests(unittest.TestCase):
@@ -69,10 +71,11 @@ class ModProjectBootstrapPolicyTests(unittest.TestCase):
         ):
             self.assertIn(phrase, self.skill)
 
-    def test_model_first_route_still_allows_complete_blockbench_production(self):
+    def test_model_first_route_obeys_a_runtime_risk_stage_ceiling(self):
         for phrase in (
-            "continue through concept approval and complete Blockbench production",
-            "geometry, textures, rigs, animations, and provisional effect/audio event contracts",
+            "runtime risk classification",
+            "production ceiling",
+            "runtime-neutral source",
             "runtime integration remains deferred",
         ):
             self.assertIn(phrase, self.bootstrap)
@@ -130,6 +133,73 @@ class ModProjectBootstrapPolicyTests(unittest.TestCase):
             self.assertIn(phrase, self.bootstrap)
         for phrase in ("project_status", "destination_path", "compatibility_evidence", "runtime_deferred"):
             self.assertIn(phrase, self.brief)
+
+
+class ModelFirstRuntimeGatePolicyTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.skill = SKILL_MD.read_text(encoding="utf-8")
+        cls.bootstrap = MOD_PROJECT_BOOTSTRAP.read_text(encoding="utf-8")
+        cls.brief = MODEL_BRIEF.read_text(encoding="utf-8")
+        cls.gate = MODEL_FIRST_RUNTIME_GATE.read_text(encoding="utf-8") if MODEL_FIRST_RUNTIME_GATE.exists() else ""
+
+    def test_skill_routes_model_first_through_a_validated_runtime_contract(self):
+        for phrase in (
+            "Read [model-first-runtime-gate.md]",
+            "runtime-contract.json",
+            "scripts/validate_runtime_contract.py",
+        ):
+            self.assertIn(phrase, self.skill)
+
+    def test_mod_creation_is_not_universally_forced_but_risk_is_classified(self):
+        for phrase in (
+            "Do not force Mod creation for every asset",
+            "low",
+            "medium",
+            "high",
+            "static decorative",
+            "complex animated entity",
+            "animated block entity",
+            "projectile",
+            "multiplayer synchronization",
+        ):
+            self.assertIn(phrase, self.gate)
+
+    def test_high_risk_model_first_requires_declining_mod_first_and_accepting_risk(self):
+        for phrase in (
+            "create_mod_first is the default recommendation",
+            "verbatim decline evidence",
+            "explicit risk acceptance",
+            "integration rework may be required",
+            "no game-ready claim",
+        ):
+            self.assertIn(phrase, self.gate)
+
+    def test_unknown_critical_runtime_fields_limit_work_to_concept_or_graybox(self):
+        for phrase in (
+            "concept_only",
+            "graybox_only",
+            "runtime_neutral_source",
+            "platform-specific export",
+            "Do not create a final rig",
+        ):
+            self.assertIn(phrase, self.gate)
+
+    def test_contract_locks_runtime_role_and_cross_system_ids(self):
+        for phrase in (
+            "asset_role",
+            "render_path",
+            "rig_signature",
+            "animation_ids",
+            "event_ids",
+            "locator_ids",
+            "projectile_spawn",
+            "integration-map.json",
+        ):
+            self.assertIn(phrase, self.gate + self.brief)
+
+    def test_runtime_contract_validator_is_shipped(self):
+        self.assertTrue(RUNTIME_CONTRACT_VALIDATOR.is_file())
 
 
 class TextureQualityPolicyTests(unittest.TestCase):

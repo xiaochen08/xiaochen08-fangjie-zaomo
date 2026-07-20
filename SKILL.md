@@ -7,7 +7,7 @@ description: "Use when creating, revising, texturing, animating, sonifying, expo
 
 ## Category routing
 
-Read [asset-identity.md](references/asset-identity.md); lock the target asset before creating or binding files. Ask whether an authorized Minecraft project exists. If absent/unknown, Read [mod-project-bootstrap.md](references/mod-project-bootstrap.md). Require an explicit project route choice before the model category: `create_mod_first` or `model_first`. Do not auto-resolve this choice. Read [model-categories.md](references/model-categories.md). Start by asking which top-level model category. Show only the compact top-level menu; accept a number, name, or free-text description, then expand only the selected branch. Read [asset-workspace.md](references/asset-workspace.md) before concepts; ask drive/root and create one approved folder per model. Read [asset-ecosystem.md](references/asset-ecosystem.md); lock scope.
+Read [asset-identity.md](references/asset-identity.md); lock the target asset before creating or binding files. Ask whether an authorized Minecraft project exists. If absent/unknown, Read [mod-project-bootstrap.md](references/mod-project-bootstrap.md). Require an explicit project route choice before the model category: `create_mod_first` or `model_first`. Do not auto-resolve this choice. Read [model-categories.md](references/model-categories.md). Start by asking which top-level model category. Show only the compact top-level menu; accept a number, name, or free-text description, then expand only the selected branch. If `model_first`, Read [model-first-runtime-gate.md](references/model-first-runtime-gate.md); classify runtime risk and lock the provisional production ceiling before images. Read [asset-workspace.md](references/asset-workspace.md) before concepts; ask drive/root and create one approved folder per model. Read [asset-ecosystem.md](references/asset-ecosystem.md); lock scope.
 
 ## Approval gate
 
@@ -25,7 +25,7 @@ Bypass only for an already-approved design anchor plus explicit generation permi
 
 ## Production workflow
 
-1. Read [model-brief.md](references/model-brief.md); save an identity-scoped `model-spec.json`.
+1. Read [model-brief.md](references/model-brief.md); save an identity-scoped `model-spec.json`. For `model_first`, create `runtime-contract.json`, run `scripts/validate_runtime_contract.py`, and obey its validated stage ceiling before detailed work.
 2. Never reinterpret the approved concept.
 3. Pass manifest-matched graybox → motion → detail → export.
 4. Apply animation, particle, and approved audio contracts through the central event table.
@@ -42,4 +42,6 @@ Bypass only for an already-approved design anchor plus explicit generation permi
 | Brief incomplete | Ask; create nothing |
 | Brief complete, concept unapproved | Generate/iterate A/B/C images only |
 | Audio mapping unapproved | Inventory and propose mappings only |
-| Concept explicitly approved | Build and animate the selected design |
+| Concept approved, runtime contract missing/invalid | Stop before detailed production |
+| Model-first critical runtime fields unresolved | Concept or graybox only |
+| Concept and runtime gate approved | Build only through the validated production ceiling |

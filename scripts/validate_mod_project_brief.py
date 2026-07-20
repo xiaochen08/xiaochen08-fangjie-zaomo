@@ -56,6 +56,20 @@ def validate_brief(brief: dict[str, Any]) -> dict[str, list[str]]:
             errors.append("runtime_deferred requires a no runtime integration claim restriction")
         if brief.get("qualification_status") == "verified" or brief.get("creation_status") == "created":
             errors.append("runtime_deferred cannot be verified or marked created")
+        if brief.get("runtime_contract_path") != "runtime-contract.json" or brief.get("runtime_contract_status") != "validated":
+            errors.append("runtime_deferred requires a validated runtime-contract.json reference")
+        risk = brief.get("runtime_risk")
+        if risk not in {"low", "medium", "high"}:
+            errors.append("runtime_deferred requires runtime_risk low, medium, or high")
+        if brief.get("production_ceiling") not in {"concept_only", "graybox_only", "runtime_neutral_source"}:
+            errors.append("runtime_deferred requires a non-platform production_ceiling")
+        if risk in {"medium", "high"}:
+            recommendation = brief.get("mod_first_recommendation")
+            if not isinstance(recommendation, dict) or recommendation.get("status") != "declined" or not recommendation.get("evidence"):
+                errors.append("medium/high model_first requires evidence of declining create_mod_first")
+            acceptance = brief.get("risk_acceptance")
+            if not isinstance(acceptance, dict) or acceptance.get("status") != "approved" or not acceptance.get("evidence"):
+                errors.append("medium/high model_first requires explicit risk acceptance evidence")
         return {"errors": errors, "warnings": warnings}
 
     if status == "existing":

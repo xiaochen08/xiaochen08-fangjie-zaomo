@@ -42,7 +42,15 @@ Do not create this production specification until the user has selected a concep
     "project_path": null,
     "destination_path": null,
     "compatibility_evidence": [],
-    "brief_path": "mod-project-brief.json | null"
+    "brief_path": "mod-project-brief.json | null",
+    "runtime_contract": {
+      "path": "runtime-contract.json | null",
+      "status": "not_required | provisional | validated",
+      "runtime_risk": "low | medium | high | unresolved",
+      "asset_role": "block | item | entity | block_entity | projectile | wearable | structure | other",
+      "render_path": "vanilla_json | entity_renderer | block_entity_renderer | custom_renderer | unresolved",
+      "production_ceiling": "concept_only | graybox_only | runtime_neutral_source | platform_export"
+    }
   },
   "blockbench_format": "free | bedrock_entity | java_block | other",
   "scale_blocks": {"width": null, "height": null, "depth": null},
@@ -140,6 +148,8 @@ Treat these as blocking when they change file format, rig topology, or game inte
 - self-rotation versus orbit, target pivot, or movement plane
 - required animations and attack mechanism
 - strict size or performance limits
+
+For `model_first`, read `model-first-runtime-gate.md` before concepts. Freeze the runtime risk intake before images, then create and validate `runtime-contract.json` after concept approval and before detailed production. Its stable `rig_signature`, `animation_ids`, `event_ids`, `locator_ids`, and `projectile_spawn` locator become the later `integration-map.json` inputs.
 
 Treat palette details, minor surface wear, secondary idle motion, and hidden-side decoration as reversible unless the user marks them essential. State the assumption before proceeding.
 

@@ -8,6 +8,8 @@
 
 Never promote a runtime by documentation alone. A template or schema can be compatible without being verified. No project means no verified runtime claim.
 
+A model-first `runtime_neutral_source` is not a release candidate and is never game-ready by itself. Promotion requires an authorized project, a reconciled `runtime-contract.json`, a complete `integration-map.json`, platform exports, a successful build, and real runtime evidence.
+
 ## Formal-release matrix
 
 A formal release requires reproducible evidence from:

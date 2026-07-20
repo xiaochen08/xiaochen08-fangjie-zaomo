@@ -7,11 +7,13 @@ Ask whether the user has an authorized Mod project and its path before asking th
 - Existing project: do not create another one; use `scripts/inspect_runtime_project.py` and preserve its hashes.
 - Missing or unknown project: offer a minimal Mod shell through the first route, present exactly these two routes, and wait for the user's explicit choice:
   1. `create_mod_first` — prepare a minimal Mod shell before model production; collect the locked creation brief only after this route is selected.
-  2. model-first (`model_first`) — record `project_status: runtime_deferred`; continue through concept approval and complete Blockbench production, including geometry, textures, rigs, animations, and provisional effect/audio event contracts; runtime integration remains deferred and no runtime integration claim is allowed.
+  2. model-first (`model_first`) — record `project_status: runtime_deferred`; run the runtime risk classification in `model-first-runtime-gate.md`; validate `runtime-contract.json`; proceed only to its production ceiling. A validated `runtime-neutral source` may include editable geometry, textures, adapter-safe groups/origins, and provisional animation/effect/audio contracts. Platform exports stay blocked, runtime integration remains deferred, and no runtime integration claim is allowed.
 
 Do not continue to the model category until the project route is explicitly selected. Do not auto-resolve, recommend as if selected, or treat silence, urgency, model approval, or “decide for me” as the route choice. Record the user's verbatim choice as `route_choice_evidence`.
 
 Never create a project from silence, urgency, delegated choice, or model approval. Project creation requires separate explicit project-creation approval and an absolute destination path that does not already exist.
+
+Do not force Mod creation for every asset. For medium/high-risk runtime-dependent assets, present `create_mod_first` as the default recommendation. If the user declines, require separate verbatim decline evidence, explicit risk acceptance, and a validated production ceiling. Unknown critical role/render/animation decisions restrict work to concepts or graybox; they never authorize a speculative final rig.
 
 ## When the version is unknown
 
@@ -38,6 +40,8 @@ Create `mod-project-brief.json` with:
 - Windows toolchain policy.
 
 Run `scripts/validate_mod_project_brief.py` and fix every error before creating files.
+
+For `runtime_deferred`, the brief must instead reference a validated `runtime-contract.json`, record `runtime_risk`, `production_ceiling`, Mod-first recommendation/decline evidence, risk acceptance, and the `no runtime integration claim` restriction.
 
 ## Windows creation rules
 

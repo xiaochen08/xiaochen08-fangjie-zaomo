@@ -98,6 +98,8 @@ Pass only when every advertised verified-support row has reproducible archived e
 
 Blockbench source geometry and animation do not automatically implement emissive shaders, particles, projectiles, damage, targeting, sound, cooldown logic, or animation state controllers. Deliver event names and timestamps, then implement or document those behaviors in the selected Minecraft runtime. Use `particle-design.md` for particles and `audio-system.md` for sound.
 
+For `model_first`, run `scripts/validate_runtime_contract.py` before detailed production and again before bundling. Treat its production ceiling as a hard maximum: a concept/graybox/runtime-neutral source cannot be relabeled as a platform export, compatible Mod asset, or game-ready deliverable.
+
 ## Delivery checklist
 
 - Editable `.bbmodel`

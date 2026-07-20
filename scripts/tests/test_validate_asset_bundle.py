@@ -120,6 +120,17 @@ class AssetBundleValidatorTests(unittest.TestCase):
         self.assertTrue(any("evidence steps are out of order" in error for error in result["errors"]))
         self.assertTrue(any("tool_version" in error for error in result["errors"]))
 
+    def test_model_first_bundle_requires_runtime_contract_resource(self):
+        model_spec = json.loads((self.base / "model-spec.json").read_text(encoding="utf-8"))
+        model_spec["mod_project"] = {"route_choice": "model_first", "project_status": "runtime_deferred"}
+        (self.base / "model-spec.json").write_text(json.dumps(model_spec), encoding="utf-8")
+        manifest = deepcopy(self.manifest)
+        for resource in manifest["resources"]:
+            if resource["path"] == "model-spec.json":
+                resource["sha256"] = sha(self.base / "model-spec.json")
+        result = self.validator.validate_bundle(manifest, self.base)
+        self.assertTrue(any("model_first bundle requires runtime-contract.json" in error for error in result["errors"]))
+
 
 if __name__ == "__main__":
     unittest.main()
