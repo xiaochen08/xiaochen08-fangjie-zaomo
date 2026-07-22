@@ -10,7 +10,8 @@ from pathlib import Path
 from typing import Any
 
 
-PROTECTED = {"geometry", "uv_layout", "rig", "animations", "bones", "bone_hierarchy", "locators", "model_scale"}
+PROTECTED = {"geometry", "uv_layout", "rig", "animations", "bones", "bone_hierarchy", "origins", "locators", "model_scale"}
+ALWAYS_IMMUTABLE = {"geometry", "rig", "animations", "bones", "bone_hierarchy", "origins", "locators", "model_scale"}
 MODES = {"delegated_production", "standalone_retexture", "delegated_uv_and_texture"}
 
 
@@ -62,6 +63,23 @@ def validate_handoff(payload: dict[str, Any], workspace: Path | str) -> dict[str
     warnings: list[str] = []
     root = Path(workspace).resolve()
 
+    if payload.get("protocol_version") != "1.0":
+        errors.append("protocol_version must be ContractFlow 1.0")
+    if payload.get("message_type") != "handoff":
+        errors.append("message_type must be handoff")
+    if payload.get("from_skill") != "fjzm" or payload.get("to_skill") != "fjzm-texture" or payload.get("stage") != "texture":
+        errors.append("central route must be fjzm to fjzm-texture at texture stage")
+    for key in ("message_id", "correlation_id", "idempotency_key"):
+        _required_text(payload, key, key, errors)
+    if not isinstance(payload.get("attempt"), int) or not 0 <= payload.get("attempt", -1) <= 2:
+        errors.append("attempt must be 0, 1, or 2")
+    writer_lock = payload.get("writer_lock") if isinstance(payload.get("writer_lock"), dict) else {}
+    if writer_lock.get("owner") != "fjzm-texture" or writer_lock.get("surface") != "texture" or not writer_lock.get("output_version"):
+        errors.append("writer_lock must assign the texture surface to fjzm-texture with an output version")
+    dependencies = payload.get("dependencies")
+    if not isinstance(dependencies, list) or not any(dep.get("stage") == "geometry" and dep.get("status") == "passed" for dep in dependencies if isinstance(dep, dict)):
+        errors.append("geometry dependency must be passed")
+
     if payload.get("schema_version") != 1:
         errors.append("schema_version must be 1")
     for key in ("project_id", "asset_id", "asset_version"):
@@ -74,7 +92,7 @@ def validate_handoff(payload: dict[str, Any], workspace: Path | str) -> dict[str
     source = payload.get("source") if isinstance(payload.get("source"), dict) else {}
     model_path = _verify_input_hash(root, source, "model_path", "model_sha256", errors)
     _verify_input_hash(root, source, "model_spec_path", "model_spec_sha256", errors)
-    for key in ("geometry_signature", "uv_signature"):
+    for key in ("geometry_signature", "rig_signature", "uv_signature"):
         _required_text(source, key, key, errors)
     if source.get("source_read_only") is not True:
         errors.append("source_read_only must be true")
@@ -103,6 +121,8 @@ def validate_handoff(payload: dict[str, Any], workspace: Path | str) -> dict[str
         errors.append("allowed_mutations must be a list")
     if mode in {"standalone_retexture", "delegated_production"} and allowed_set & PROTECTED:
         errors.append(f"{mode} cannot allow protected geometry, UV, rig, or animation mutations")
+    for surface in sorted(allowed_set & ALWAYS_IMMUTABLE):
+        errors.append(f"immutable model surface cannot be changed by texture: {surface}")
 
     analysis = payload.get("analysis") if isinstance(payload.get("analysis"), dict) else {}
     if analysis.get("reference_scene_lighting_recorded") is not True:

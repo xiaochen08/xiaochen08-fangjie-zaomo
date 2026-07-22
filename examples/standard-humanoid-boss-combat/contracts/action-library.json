@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "project_id": "fjzm_examples",
+  "asset_id": "iron_vanguard_boss",
+  "asset_version": "1.0.0",
+  "model_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "rig_signature": "rig-iron-vanguard-humanoid-v1",
+  "actions": [
+    {"action_id": "animation.iron_vanguard.guard", "role": "fallback"},
+    {"action_id": "animation.iron_vanguard.slash_left", "role": "attack"},
+    {"action_id": "animation.iron_vanguard.slash_right", "role": "attack"},
+    {"action_id": "animation.iron_vanguard.overhead", "role": "finisher"},
+    {"action_id": "animation.iron_vanguard.spin", "role": "area_attack"},
+    {"action_id": "animation.iron_vanguard.gap_close", "role": "approach"},
+    {"action_id": "animation.iron_vanguard.leap", "role": "aerial_attack"},
+    {"action_id": "animation.iron_vanguard.recover", "role": "recovery"},
+    {"action_id": "animation.iron_vanguard.phase_change", "role": "phase_transition"}
+  ]
+}

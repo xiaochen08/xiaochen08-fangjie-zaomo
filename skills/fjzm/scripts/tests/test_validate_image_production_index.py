@@ -24,29 +24,35 @@ def complete_index():
         "rounds": [
             {
                 "round_id": "round-001",
-                "round_type": "asset_overview",
+                "round_type": "concept_choice",
                 "status": "approved",
-                "asset_id": None,
+                "asset_id": "crystal_tower",
                 "screen_id": None,
                 "depends_on": [],
-                "prompt_path": "design/image-rounds/round-001__asset-overview/prompt.md",
-                "negative_prompt_path": "design/image-rounds/round-001__asset-overview/negative-prompt.md",
-                "manifest_path": "design/image-rounds/round-001__asset-overview/manifest.json",
-                "image_sha256": ["a" * 64],
-                "approval_evidence": "用户确认总览范围",
+                "prompt_path": "design/image-rounds/round-001__concept-choice/prompt.md",
+                "negative_prompt_path": "design/image-rounds/round-001__concept-choice/negative-prompt.md",
+                "manifest_path": "design/image-rounds/round-001__concept-choice/manifest.json",
+                "generation_mode": "separate_calls",
+                "variant_calls": [
+                    {"variant": "A", "call_id": "call-a", "quality_status": "passed", "image_sha256": "a" * 64},
+                    {"variant": "B", "call_id": "call-b", "quality_status": "passed", "image_sha256": "b" * 64},
+                    {"variant": "C", "call_id": "call-c", "quality_status": "passed", "image_sha256": "c" * 64},
+                ],
+                "image_sha256": ["a" * 64, "b" * 64, "c" * 64],
+                "approval_evidence": "用户选择方案 B",
                 "next_round": "round-002",
             },
             {
                 "round_id": "round-002",
-                "round_type": "model_theme",
+                "round_type": "asset_detail",
                 "status": "shown",
                 "asset_id": "crystal_tower",
                 "screen_id": None,
                 "depends_on": ["round-001"],
-                "prompt_path": "design/image-rounds/round-002__model-theme/prompt.md",
-                "negative_prompt_path": "design/image-rounds/round-002__model-theme/negative-prompt.md",
-                "manifest_path": "design/image-rounds/round-002__model-theme/manifest.json",
-                "image_sha256": ["b" * 64, "c" * 64, "d" * 64],
+                "prompt_path": "design/image-rounds/round-002__asset-detail/prompt.md",
+                "negative_prompt_path": "design/image-rounds/round-002__asset-detail/negative-prompt.md",
+                "manifest_path": "design/image-rounds/round-002__asset-detail/manifest.json",
+                "image_sha256": ["d" * 64],
                 "approval_evidence": None,
                 "next_round": "round-003",
             },
@@ -95,6 +101,25 @@ class ImageProductionIndexValidatorTests(unittest.TestCase):
         payload = complete_index()
         payload["rounds"][1]["status"] = "done"
         self.assertTrue(any("status" in error for error in self.validator.validate_index(payload)["errors"]))
+
+    def test_concept_choice_requires_exactly_three_separate_abc_calls(self):
+        payload = complete_index()
+        payload["rounds"][0]["variant_calls"].pop()
+        joined = "\n".join(self.validator.validate_index(payload)["errors"])
+        self.assertIn("exactly three", joined)
+
+        payload = complete_index()
+        payload["rounds"][0]["generation_mode"] = "single_grid"
+        joined = "\n".join(self.validator.validate_index(payload)["errors"])
+        self.assertIn("separate_calls", joined)
+
+    def test_concept_choice_cannot_be_shown_with_a_failed_candidate(self):
+        payload = complete_index()
+        payload["rounds"][0]["status"] = "shown"
+        payload["rounds"][0]["approval_evidence"] = None
+        payload["rounds"][0]["variant_calls"][1]["quality_status"] = "failed"
+        joined = "\n".join(self.validator.validate_index(payload)["errors"])
+        self.assertIn("all A/B/C candidates must pass quality review before showing", joined)
 
 
 if __name__ == "__main__":

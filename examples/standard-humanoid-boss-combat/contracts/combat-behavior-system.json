@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "project_id": "fjzm_examples",
+  "asset_id": "iron_vanguard_boss",
+  "asset_version": "1.0.0",
+  "model_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "rig_signature": "rig-iron-vanguard-humanoid-v1",
+  "animation_backend": "blender_epicfight",
+  "runtime_ownership": {
+    "owner_skill": "fjzm",
+    "server_authoritative": true,
+    "animation_workshop_role": "author_and_validate_contract"
+  },
+  "selection_policy": {
+    "mode": "seeded_weighted",
+    "seed_source": "entity_uuid_and_combat_cycle",
+    "repetition_penalty": 0.35,
+    "history_size": 3,
+    "fallback_action_id": "animation.iron_vanguard.guard"
+  },
+  "weapon_profiles": [
+    {
+      "weapon_profile_id": "greatsword_two_hand",
+      "category": "greatsword",
+      "style": "two_hand",
+      "allowed_action_ids": [
+        "animation.iron_vanguard.guard",
+        "animation.iron_vanguard.slash_left",
+        "animation.iron_vanguard.slash_right",
+        "animation.iron_vanguard.overhead",
+        "animation.iron_vanguard.spin",
+        "animation.iron_vanguard.gap_close",
+        "animation.iron_vanguard.leap",
+        "animation.iron_vanguard.recover"
+      ]
+    }
+  ],
+  "interrupt_policies": [
+    {
+      "interrupt_policy_id": "boss_standard",
+      "allowed_interrupts": ["hurt", "stun", "knockdown", "target_lost", "phase_change", "death", "unload"],
+      "priority": ["death", "unload", "phase_change", "knockdown", "stun", "hurt", "target_lost"],
+      "cleanup_event_ids": ["event.hitbox_off", "event.combat_cleanup"]
+    }
+  ],
+  "behavior_series": [
+    {
+      "series_id": "close_combo_a",
+      "weapon_profile_id": "greatsword_two_hand",
+      "weight": 60.0,
+      "cooldown_ticks": 18,
+      "loop": {"enabled": false, "max_iterations": 1},
+      "interrupt_policy_id": "boss_standard",
+      "conditions": {
+        "distance": {"min": 0.0, "max": 3.2},
+        "eye_height": {"min": -1.5, "max": 1.5},
+        "required_states": ["grounded", "line_of_sight"]
+      },
+      "steps": [
+        {
+          "action_id": "animation.iron_vanguard.slash_left",
+          "play_speed": 1.0,
+          "transition": "blend",
+          "root_motion": "authored",
+          "cancel_window": [0.72, 1.0],
+          "event_ids": ["event.blade_whoosh", "event.hitbox_on", "event.hitbox_off"],
+          "branch": {"on_hit": "continue", "on_whiff": "recover"}
+        },
+        {
+          "action_id": "animation.iron_vanguard.slash_right",
+          "play_speed": 1.08,
+          "transition": "conditional",
+          "root_motion": "authored",
+          "cancel_window": [0.68, 1.0],
+          "event_ids": ["event.blade_whoosh", "event.hitbox_on", "event.hitbox_off"],
+          "branch": {"on_hit": "continue", "on_whiff": "recover"}
+        },
+        {
+          "action_id": "animation.iron_vanguard.overhead",
+          "play_speed": 0.92,
+          "transition": "conditional",
+          "root_motion": "authored",
+          "cancel_window": [0.8, 1.0],
+          "event_ids": ["event.blade_whoosh", "event.hitbox_on", "event.ground_impact", "event.hitbox_off"],
+          "branch": {"on_hit": "recover", "on_whiff": "recover"}
+        }
+      ]
+    },
+    {
+      "series_id": "close_spin_finisher",
+      "weapon_profile_id": "greatsword_two_hand",
+      "weight": 34.0,
+      "cooldown_ticks": 34,
+      "loop": {"enabled": false, "max_iterations": 1},
+      "interrupt_policy_id": "boss_standard",
+      "conditions": {
+        "distance": {"min": 0.0, "max": 2.6},
+        "eye_height": {"min": -1.2, "max": 1.2},
+        "required_states": ["grounded", "line_of_sight"]
+      },
+      "steps": [
+        {
+          "action_id": "animation.iron_vanguard.spin",
+          "play_speed": 1.12,
+          "transition": "blend",
+          "root_motion": "authored",
+          "cancel_window": [0.82, 1.0],
+          "event_ids": ["event.blade_whoosh", "event.hitbox_on", "event.hitbox_off"],
+          "branch": {"on_hit": "recover", "on_whiff": "recover"}
+        }
+      ]
+    },
+    {
+      "series_id": "mid_gap_close",
+      "weapon_profile_id": "greatsword_two_hand",
+      "weight": 48.0,
+      "cooldown_ticks": 24,
+      "loop": {"enabled": false, "max_iterations": 1},
+      "interrupt_policy_id": "boss_standard",
+      "conditions": {
+        "distance": {"min": 2.5, "max": 6.0},
+        "eye_height": {"min": -2.0, "max": 2.0},
+        "required_states": ["grounded", "line_of_sight"]
+      },
+      "steps": [
+        {
+          "action_id": "animation.iron_vanguard.gap_close",
+          "play_speed": 1.18,
+          "transition": "conditional",
+          "root_motion": "authored",
+          "cancel_window": [0.75, 1.0],
+          "event_ids": ["event.heavy_step", "event.hitbox_on", "event.hitbox_off"],
+          "branch": {"on_hit": "recover", "on_whiff": "recover"}
+        }
+      ]
+    },
+    {
+      "series_id": "far_leap",
+      "weapon_profile_id": "greatsword_two_hand",
+      "weight": 26.0,
+      "cooldown_ticks": 48,
+      "loop": {"enabled": false, "max_iterations": 1},
+      "interrupt_policy_id": "boss_standard",
+      "conditions": {
+        "distance": {"min": 5.5, "max": 10.0},
+        "eye_height": {"min": -3.0, "max": 3.0},
+        "required_states": ["grounded", "line_of_sight"]
+      },
+      "steps": [
+        {
+          "action_id": "animation.iron_vanguard.leap",
+          "play_speed": 1.0,
+          "transition": "conditional",
+          "root_motion": "authored",
+          "cancel_window": [0.86, 1.0],
+          "event_ids": ["event.heavy_step", "event.hitbox_on", "event.ground_impact", "event.hitbox_off"],
+          "branch": {"on_hit": "recover", "on_whiff": "recover"}
+        }
+      ]
+    }
+  ],
+  "phase_profiles": [
+    {
+      "phase_id": "phase_1",
+      "health_range": [0.5, 1.0],
+      "allowed_series_ids": ["close_combo_a", "mid_gap_close"],
+      "transition_action_id": "animation.iron_vanguard.phase_change"
+    },
+    {
+      "phase_id": "phase_2",
+      "health_range": [0.0, 0.5],
+      "allowed_series_ids": ["close_combo_a", "close_spin_finisher", "mid_gap_close", "far_leap"],
+      "transition_action_id": "animation.iron_vanguard.phase_change"
+    }
+  ],
+  "acceptance": {
+    "all_transitions_previewed": true,
+    "hit_and_whiff_branches_tested": true,
+    "interrupt_cleanup_tested": true,
+    "actual_runtime_evidence_required": true
+  }
+}

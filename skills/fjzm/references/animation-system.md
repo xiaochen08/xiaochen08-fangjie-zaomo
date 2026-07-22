@@ -7,14 +7,23 @@
 - Rig, clip, state-machine, and event contracts
 - Motion, loops, transitions, collisions, and performance
 - Workflow, validation, and delivery
+- Combat behavior orchestration and runtime ownership
 
-Blockbench animation timeline does not implement gameplay state machines, AI decisions, damage, hitboxes, particles, sound, projectile spawning, or runtime blending. It authors bones/groups and animation clips; the target runtime controls states, transitions, and events.
+The animation system has two internal authoring backends: `blockbench` and `blender_epicfight`. Blockbench animation timeline does not implement gameplay state machines; Blender does not implement the Minecraft runtime either. Neither authoring application owns AI decisions, damage, hitboxes, particles, sound, projectile spawning, or runtime blending; the target runtime controls states, transitions, and events.
 
 ## Main and specialist boundary
 
-`fjzm` remains the approval owner and integration owner. `$fjzm-animation` is the single animation writer for an identity-locked handoff. Before animation production, `$fjzm` creates `animation-handoff.json`, locks `project_id`, `asset_id`, `asset_version`, `model_sha256`, and `rig_signature`, and runs `fjzm-animation/scripts/validate_animation_handoff.py`.
+`fjzm` remains the approval owner and integration owner. `$fjzm-animation` is the single animation writer for an identity-locked handoff and owns both internal backends. Before animation production, `$fjzm` creates schema-v2 `animation-handoff.json`, locks `project_id`, `asset_id`, `asset_version`, `model_sha256`, `rig_signature`, and `animation_backend`, and runs `fjzm-animation/scripts/validate_animation_handoff.py`.
 
 The specialist writes a new version and `animation-result.json`; it does not overwrite the source. Its result must return to `$fjzm` before integration continues. A geometry or rig-topology change requires a new main approval, a new handoff, and dependent rebinding. Do not bind particles, audio, hitboxes, or projectiles to a changed rig before the result returns.
+
+For `motion_domain: combat`, `$fjzm-animation` also authors and validates `combat-behavior-system.json`. `$fjzm` owns runtime combat selection, target sensing, server-authoritative damage/hitboxes, event binding, networking, and release evidence. The specialist contract may specify the intended behavior but cannot claim the Mod implements it.
+
+## Backend selection
+
+Use `blockbench` for machines, turrets, block entities, orbiting parts, ordinary creature loops, and animation systems whose target runtime consumes Blockbench/GeckoLib-style clips. Use `blender_epicfight` for approved Java humanoids or humanoid-like combat where planted feet, full-body weight transfer, rolls, aerial attacks, long combos, curve control, or Epic Fight integration materially improves the result.
+
+Do not use Blender merely because it is more powerful. For simple mechanisms it adds conversion and export risk without visible benefit. When the Blender route is recommended, explain the expected quality gain, first-project setup cost, reusable-template benefit, required software, and runtime dependency in separate plain-language decisions before image generation. A route change invalidates the animation handoff and requires a new version.
 
 ## Activate before concept generation
 
@@ -28,6 +37,7 @@ Before concepts, create a provisional consultation design containing:
 - important key poses and whether they change the silhouette of A/B/C concepts;
 - runtime events for particles, sounds, projectiles, hitboxes, damage windows, footsteps, and gameplay callbacks;
 - target runtime support for blending, root motion, procedural look/aim, animation controllers, and event markers.
+- for combat assets, weapon profiles, distance and eye-height bands, weighted behavior series, repetition control, hit and whiff branches, interruption cleanup, and boss phase rhythm.
 
 Do not create production rig or animation files before concept approval. After approval, freeze this design as `animation-system.json` and link it from `model-spec.json`.
 
@@ -81,6 +91,20 @@ Graybox every stage before texture polish. Validate fragment/crystal/limb cleara
 ## Suggested timing ranges
 
 Use these as starting points, not mandatory values: idle 2–4 s, walk 0.8–1.2 s per cycle, run 0.5–0.8 s, normal attack 0.6–1.5 s, hurt 0.25–0.6 s, death 1.2–3 s, startup 0.5–2 s, interact/open 0.4–1.5 s. Adjust for scale, weight, gameplay readability, and target tick rate.
+
+## Combat director contract
+
+For `motion_domain: combat`, Read the animation workshop's [combat behavior orchestration](../../fjzm-animation/references/combat-behavior-orchestration.md) reference. Build individual actions first, then connect them through `combat-behavior-system.json` using weapon profiles, distance and eye-height eligibility, seeded weighted selection, repetition penalty, bounded long combos, per-step speed, hit and whiff branches, interrupt cleanup, and phase transitions.
+
+Run the workshop validator before runtime integration:
+
+```powershell
+python -X utf8 ../fjzm-animation/scripts/validate_combat_behavior.py combat-behavior-system.json `
+  --action-library action-library.json `
+  --events animation-events.json
+```
+
+A passing contract is required but not sufficient. `$fjzm` must implement or bind the decisions in the exact target Mod/runtime and collect server-authoritative evidence for targeting, selection, damage, hitboxes, events, cooldown, interruption, death, unload, multiplayer, and reload. Never copy another project's animation assets or treat its runtime IDs and timing values as a preset.
 
 ## Rig contract
 
@@ -214,7 +238,7 @@ This animation event table is the source of truth. Particle contracts, sounds, p
 
 ## Production workflow
 
-1. Confirm runtime capabilities and animation inventory.
+1. Confirm runtime capabilities, animation inventory, and approved `animation_backend`.
 2. Create and validate the identity-scoped animation handoff; grant one write lock to `$fjzm-animation`.
 3. Freeze the approved silhouette, moving assemblies, and provisional state graph.
 4. Build rig hierarchy, pivots, sockets, default pose, and root-motion policy only within the approved handoff.
@@ -222,10 +246,11 @@ This animation event table is the source of truth. Particle contracts, sounds, p
 6. Author primary poses, timing, interpolation, contacts, clearances, and secondary motion.
 7. Add the central event table, but defer particle, sound, projectile, hitbox, and gameplay binding until the specialist result returns.
 8. Test loops, every legal transition, interruption, retrigger, cleanup, collision, and LOD.
-9. Reopen the saved model and verify in actual Blockbench; return `animation-result.json` to `$fjzm`, then test approved controllers, events, blending, and root motion in the actual target runtime.
+9. For combat, create and validate `combat-behavior-system.json` against the action library and central event table.
+10. Reopen the saved project in actual Blockbench or actual Blender according to the locked backend; return `animation-result.json` to `$fjzm`, then test approved controllers, events, behavior selection, branches, blending, exports, and root motion in the actual target runtime.
 
 ## Acceptance and delivery
 
-- Actual Blockbench evidence: each full clip at normal speed, key poses, loop seam, transition prototypes, damage-state and destruction previews, outliner hierarchy, and pivot views.
+- Route-specific authoring evidence: actual Blockbench or actual Blender captures for each full clip at normal speed, key poses, loop seam, transition prototypes, damage-state and destruction previews, hierarchy, pivots/joints, and contacts.
 - Runtime evidence: state changes, transition matrix, priorities, blends, interruptions, event synchronization, hitboxes, particles/sounds, root motion, and cleanup.
-- Deliver `.bbmodel`, runtime exports, `animation-system.json`, animation event table, controller/integration files when authorized, clip previews, transition previews, validator requirements, collision report, and known limitations.
+- Deliver the immutable `.bbmodel` plus the route-owned `.bbmodel` or `.blend`, runtime exports, `rig-map.json` and `action-library.json` when applicable, `animation-system.json`, animation event table, `combat-behavior-system.json` when applicable, authorized controller files, previews, validator evidence, collision report, and known limitations.

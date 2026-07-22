@@ -6,7 +6,7 @@ Use this when the Mod includes a screen, menu, HUD, inventory, machine panel, Bo
 
 Do not implement GUI textures or code from a text description alone. Complete the one-question-at-a-time intake, then **REQUIRED SUB-SKILL: use imagegen** to create three distinct Minecraft-faithful GUI theme previews. Obtain explicit GUI approval independently from model approval. Silence or model approval is not GUI approval.
 
-Follow `image-production-system.md`. The full asset overview shows which GUI screens belong to the Mod, but it does not approve their layouts. Generate GUI A/B/C as independent rounds after the shared visual theme is known. After the user selects a GUI theme, continue screen-specific detail and state rounds one screen at a time; preserve every round and resume from `design/image-production-index.json` in later conversations.
+Follow `image-production-system.md`. Confirm which GUI screens belong to the Mod in the text-only asset-scope manifest; do not generate a GUI overview image. Generate GUI A/B/C as independent, separately called candidates after the shared visual theme is known. For a GUI-only job, its first image batch must directly be three separately generated GUI choices shown together. After the user selects a GUI theme, continue screen-specific detail and state rounds one screen at a time; preserve every round and resume from `design/image-production-index.json` in later conversations.
 
 The three directions must be meaningfully different while supporting the same functions:
 
@@ -32,7 +32,7 @@ Use no web-dashboard styling, modern SaaS cards, browser navigation, glossy mobi
 
 ## Image generation package
 
-Generate each theme separately at the same screen size and information content. Each package includes:
+Generate each theme separately with exactly three imagegen calls at the same screen size, information content, and quality floor. Do not use a recolor, reduced-detail layout, or sacrificial option as filler. Audit all three and show them together. Each package includes:
 
 1. full screen at the target aspect and GUI scale;
 2. component/state sheet for panels, buttons, slots, icons, meters, tabs, and tooltips;

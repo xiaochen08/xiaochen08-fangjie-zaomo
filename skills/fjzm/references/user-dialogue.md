@@ -111,4 +111,6 @@ If the user chooses revision, ask the single most important revision question ne
 
 Read `image-production-system.md` before an image approval turn. Use `image-production-index.json` to identify the one current batch. Show the current model A/B/C set, one asset detail batch, one action sheet, or one GUI screen batch, then ask one active approval question. Do not ask the user to approve multiple assets and GUI screens together.
 
+Before the first image, confirm the frozen asset list in text only. Do not show a test image, overview image, or temporary single candidate. The first visual turn must show the complete A/B/C set produced by three separate calls. If any candidate is still generating or failed review, continue internally and show nothing until all three qualify. Ask the user to choose only after A, B, and C are visible together.
+
 Theme selection is one decision. A later per-asset detail approval is another. GUI theme approval and screen-state approval are also separate decisions. Record every answer against the current `round_id`, then move only the highest-priority unresolved round to the front of the queue.

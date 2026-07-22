@@ -2,39 +2,40 @@
 
 > **让你不会 Blockbench，也能把脑子里的 Minecraft 模型一步步做出来。Enjoy! ✨**
 
-**正式名称：方界造模｜品牌缩写：FJZM｜主调用名：`$fjzm`｜纹理专修：`$fjzm-texture`｜动画专修：`$fjzm-animation`**
+**正式名称：方界造模｜品牌缩写：FJZM｜主调用名：`$fjzm`｜模型专修：`$fjzm-model`｜纹理专修：`$fjzm-texture`｜动画专修：`$fjzm-animation`**
 
-**当前版本：v4.2.0｜发布日期：2026-07-20**
+**当前版本：v5.2.0｜发布日期：2026-07-22**
 
 [🌐 打开可视化使用说明](https://xiaochen08.github.io/MC-FJZM/) · [📖 看详细教程](docs/USER_GUIDE.md) · [🧭 看完整流程](docs/WORKFLOW.md) · [🗓️ 查看更新日志](CHANGELOG.md)
 
-📦 [直接下载 FJZM v4.2.0 完整套件](dist/fjzm-suite-v4.2.0.zip)
+📦 [直接下载 FJZM v5.2.0 完整套件](dist/fjzm-suite-v5.2.0.zip)
 
-使用 WorkBuddy：下载同一个套件 ZIP，再按 [WorkBuddy 导入说明](docs/WORKBUDDY.md) 依次导入里面的三个技能包。
+使用 WorkBuddy：下载同一个套件 ZIP，再按 [WorkBuddy 导入说明](docs/WORKBUDDY.md) 依次导入里面的四个技能包。
 
 ---
 
 ## 一次安装完整套件
 
-v4.2.0 不再只发一个孤立的大 Skill。正式套件同时包含：
+v5.2.0 不是一个什么都抢着做的大 Skill，而是一套由主控统一调度的四技能系统：
 
 - [`$fjzm`](skills/fjzm/SKILL.md)：需求、方案图、模型、贴图、光影、粒子、音效、Mod 接入和最终验收的总负责人；
+- [`$fjzm-model`](skills/fjzm-model/SKILL.md)：灰盒、几何、基础骨架、八视图叠图和模型还原度证据；
 - [`$fjzm-texture`](skills/fjzm-texture/SKILL.md)：UV、像素贴图、材质层次、眼睛、接缝和贴图返修；
-- [`$fjzm-animation`](skills/fjzm-animation/SKILL.md)：只负责骨骼、动画生产、Blockbench 预览、诊断和返修。
+- [`$fjzm-animation`](skills/fjzm-animation/SKILL.md)：骨骼、动画生产、Blockbench 或 Blender/Epic Fight 后端、战斗动作编排、预览、诊断和返修。
 
-主 Skill 负责统一审批和集成；纹理工坊返回 `texture-result.json`，动画工坊返回 `animation-result.json`。缺少对应子技能时，主流程会停止那部分专业生产，避免半套流程继续乱做。
+主 Skill 负责统一审批和集成，三个工坊通过 ContractFlow v1 交接模型身份、哈希、骨架签名和写入权限。缺少任意工坊时，主流程会停止对应生产，避免串模型、覆盖文件或把不兼容结果硬接进 Mod。
 
-### 方法一：一条命令安装三个 Skill
+### 方法一：一条命令安装四个 Skill
 
 在 Windows PowerShell 中执行：
 
 ~~~powershell
-python -X utf8 "$env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" --repo xiaochen08/MC-FJZM --ref v4.2.0 --path skills/fjzm skills/fjzm-texture skills/fjzm-animation
+python -X utf8 "$env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py" --repo xiaochen08/MC-FJZM --ref v5.2.0 --path skills/fjzm skills/fjzm-model skills/fjzm-texture skills/fjzm-animation
 ~~~
 
 ### 方法二：一个 ZIP 离线安装
 
-下载仓库中的 [`dist/fjzm-suite-v4.2.0.zip`](dist/fjzm-suite-v4.2.0.zip)，解压后在该目录运行：
+下载仓库中的 [`dist/fjzm-suite-v5.2.0.zip`](dist/fjzm-suite-v5.2.0.zip)，解压后在该目录运行：
 
 ~~~powershell
 .\Install-FJZMSuite.ps1
@@ -46,7 +47,7 @@ python -X utf8 "$env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\i
 .\Install-FJZMSuite.ps1 -BackupAndReplace
 ~~~
 
-脚本会先做完整性检查，再同时更新三个 Skill，并保留带日期的旧版备份；如果检测到不完整套件，脚本会拒绝继续，防止半套安装。
+脚本会先做完整性检查，再同时更新四个 Skill，并保留带日期的旧版备份；如果检测到不完整套件，脚本会拒绝继续，防止半套安装。
 
 安装完成后重启 Codex，然后直接说：
 
@@ -61,13 +62,26 @@ Skill 本体包含：
 
 | 目录 | 作用 |
 |---|---|
-| [.codex-plugin/plugin.json](.codex-plugin/plugin.json) | 同时注册三个 Skill 的插件清单 |
+| [.codex-plugin/plugin.json](.codex-plugin/plugin.json) | 同时注册四个 Skill 的插件清单 |
 | [skills/fjzm](skills/fjzm) | 方界造模主 Skill 完整本体 |
+| [skills/fjzm-model](skills/fjzm-model) | 模型工坊子 Skill 完整本体 |
 | [skills/fjzm-texture](skills/fjzm-texture) | 纹理工坊子 Skill 完整本体 |
 | [skills/fjzm-animation](skills/fjzm-animation) | 动画工坊子 Skill 完整本体 |
-| [dist/fjzm-suite-v4.2.0.zip](dist/fjzm-suite-v4.2.0.zip) | Codex 与 WorkBuddy 离线完整套件 |
+| [dist/fjzm-suite-v5.2.0.zip](dist/fjzm-suite-v5.2.0.zip) | Codex 离线完整套件；其中也包含四个 WorkBuddy 单技能包 |
 | [Install-FJZMSuite.ps1](Install-FJZMSuite.ps1) | Windows 成套安装与安全更新脚本 |
 | [SKILL.md](SKILL.md) | 为旧安装方式保留的主 Skill 兼容入口 |
+
+## v5.2.0 重点更新：四技能协作、双动画后端与战斗导演
+
+- 模型几何从主流程剥离为 `$fjzm-model`，专门解决“概念图好看、Blockbench 还原差”的问题；
+- 四技能统一使用 ContractFlow v1，主控是唯一调度者，专业工坊不能互相越权改文件；
+- 动画工坊保留 Blockbench 原生路线，同时加入 Blender 制作、Epic Fight 接入与重定向合同；
+- 新增战斗导演：根据武器姿态、距离、高度、冷却和 Boss 阶段筛选动作，并处理权重、防重复、命中/落空、硬直打断和退出清理；
+- 借鉴高观赏性 Minecraft 动画的通用动作组织思路，但不复制“烦人的村民”、Epic Fight、WOM 或其他作品的动画资产；
+- 新增原创标准人形 Boss `Iron Vanguard` 技术样例，用 2000 次决策模拟验证动作选择与状态清理；
+- 模拟报告只证明合同逻辑，不冒充 Blockbench、Blender 或 Minecraft 游戏内视觉验证。
+
+[查看 v5.2.0 完整更新内容](CHANGELOG.md#520---2026-07-22) · [查看原创 Boss 战斗编排样例](examples/standard-humanoid-boss-combat/README.md)
 
 ## v4.2.0 重点更新：连续生图项目制与资产展示合同
 

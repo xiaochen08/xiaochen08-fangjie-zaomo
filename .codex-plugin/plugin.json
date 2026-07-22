@@ -1,26 +1,27 @@
 {
   "name": "fjzm-suite",
-  "version": "4.2.0",
-  "description": "方界造模主流程、动画工坊与纹理工坊的 Minecraft Mod 与 Blockbench 完整套件。",
+  "version": "5.2.0",
+  "description": "方界造模主控、模型工坊、纹理工坊与带战斗导演层的双后端动画工坊组成的 Minecraft Mod 高还原套件。",
   "author": {
     "name": "xiaochen08",
     "url": "https://github.com/xiaochen08"
   },
   "homepage": "https://github.com/xiaochen08/MC-FJZM",
   "repository": "https://github.com/xiaochen08/MC-FJZM",
-  "keywords": ["minecraft", "blockbench", "modeling", "animation", "texture", "gui", "mod", "utf-8"],
+  "keywords": ["minecraft", "blockbench", "modeling", "fidelity", "animation", "texture", "gui", "mod", "utf-8"],
   "skills": "./skills/",
   "interface": {
-    "displayName": "方界造模 FJZM 三技能套件",
-    "shortDescription": "Minecraft Mod、模型、GUI、动画和资源成套生产。",
-    "longDescription": "选择创建 Mod 后先锁定 Minecraft 版本并通过 Windows UTF-8 红色门禁；用户只需提供盘符。系统先生成全资产总览，再把模型 A/B/C、全视图、动作和 GUI 分轮确认并永久归档；每个资产都有名称、灰色斜体 Mod 名、用法和彩蛋文案，最后由纹理和动画工坊完成生产与验证。",
+    "displayName": "方界造模 FJZM 四技能套件",
+    "shortDescription": "用合同化分工完成 Minecraft Mod、模型、贴图、动画和验证。",
+    "longDescription": "FJZM v5.2.0 由主控、模型工坊、纹理工坊和动画工坊组成。动画工坊内部支持 Blockbench 与 Blender/Epic Fight 两条路线，并新增战斗导演层：按武器姿态、距离和高度筛选动作，以加权、防重复、命中/落空分支、打断清理和 Boss 阶段规则组织原创连段。四技能使用 ContractFlow v1 锁定模型身份、骨架、文件哈希、写入范围和依赖顺序，并要求真实创作软件与 Minecraft 双重验证。",
     "developerName": "xiaochen08",
     "category": "Developer Tools",
-    "capabilities": ["Minecraft Mod bootstrap", "UTF-8 preflight", "Persistent image production", "Complete model views", "Themed asset presentation", "Blockbench modeling", "Minecraft GUI design", "Pixel texture production", "Animation revision"],
+    "capabilities": ["ContractFlow orchestration", "Minecraft Mod bootstrap", "UTF-8 preflight", "Blockbench geometry fidelity", "Eight-view overlay comparison", "Pixel texture production", "Blockbench animation backend", "Blender and Epic Fight animation backend", "Combat behavior orchestration", "Weighted combo selection", "Rig retargeting", "Minecraft runtime validation", "Shader evidence"],
     "defaultPrompt": [
-      "使用 $fjzm 创建 Minecraft Mod 与模型，先问 Minecraft 版本并通过 UTF-8 红色门禁，再按全资产总览、A/B/C、全视图、动作与 GUI 的顺序逐轮确认。",
-      "使用 $fjzm-texture 分析参考图和 UV，再制作高级像素贴图。",
-      "使用 $fjzm-animation 诊断并优化现有 Blockbench 动画。"
+      "使用 $fjzm 创建 Minecraft Mod 与模型；一次只问我一个简单问题，先完成三选一图片确认，再按 ContractFlow 调用三个工坊。",
+      "使用 $fjzm-model 按主技能批准的参考图制作高还原 Blockbench 几何和八视图对比证据。",
+      "使用 $fjzm-texture 在冻结几何上制作最终 UV、高质量像素贴图和材质图。",
+      "使用 $fjzm-animation 在冻结模型接口上选择 Blockbench 或 Blender/Epic Fight 后端制作、检查和优化动画；战斗资产同时生成并验证战斗编排合同。"
     ],
     "brandColor": "#00D8FF"
   }

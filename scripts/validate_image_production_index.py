@@ -17,6 +17,7 @@ SHA256_PATTERN = re.compile(r"^[0-9a-fA-F]{64}$")
 STATUSES = {"queued", "generated", "shown", "revision_requested", "approved", "superseded"}
 HASHED_STATUSES = STATUSES - {"queued"}
 PATH_FIELDS = ("prompt_path", "negative_prompt_path", "manifest_path")
+VISIBLE_STATUSES = {"shown", "revision_requested", "approved", "superseded"}
 
 
 def _text(value: Any) -> bool:
@@ -100,6 +101,50 @@ def validate_index(payload: dict[str, Any]) -> dict[str, list[str]]:
 
         if status == "approved" and not _text(entry.get("approval_evidence")):
             errors.append(f"{path}.approval_evidence is required for an approved round")
+
+        if entry.get("round_type") == "concept_choice":
+            if entry.get("generation_mode") != "separate_calls":
+                errors.append(f"{path}.generation_mode must be separate_calls for a concept_choice round")
+
+            calls = entry.get("variant_calls")
+            valid_calls = isinstance(calls, list) and len(calls) == 3
+            if not valid_calls:
+                errors.append(f"{path}.variant_calls must contain exactly three A/B/C calls")
+                calls = []
+
+            variants: list[str] = []
+            all_quality_passed = True
+            call_ids: list[str] = []
+            call_hashes: list[str] = []
+            for call_index, call in enumerate(calls):
+                call_path = f"{path}.variant_calls[{call_index}]"
+                if not isinstance(call, dict):
+                    errors.append(f"{call_path} must be an object")
+                    all_quality_passed = False
+                    continue
+                variant = call.get("variant")
+                variants.append(variant)
+                call_id = call.get("call_id")
+                if not _text(call_id):
+                    errors.append(f"{call_path}.call_id is required")
+                else:
+                    call_ids.append(call_id)
+                if call.get("quality_status") != "passed":
+                    all_quality_passed = False
+                image_hash = call.get("image_sha256")
+                if not isinstance(image_hash, str) or not SHA256_PATTERN.fullmatch(image_hash):
+                    errors.append(f"{call_path}.image_sha256 must be a valid SHA-256 hash")
+                else:
+                    call_hashes.append(image_hash.lower())
+
+            if valid_calls and variants != ["A", "B", "C"]:
+                errors.append(f"{path}.variant_calls must be ordered exactly as A, B, C")
+            if len(call_ids) != len(set(call_ids)):
+                errors.append(f"{path}.variant_calls call_id values must be unique")
+            if len(call_hashes) != len(set(call_hashes)):
+                errors.append(f"{path}.variant_calls image hashes must be unique")
+            if status in VISIBLE_STATUSES and not all_quality_passed:
+                errors.append(f"{path}: all A/B/C candidates must pass quality review before showing")
 
     active_round_id = payload.get("active_round_id")
     if active_round_id is not None and active_round_id not in known_ids:

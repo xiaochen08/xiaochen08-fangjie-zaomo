@@ -134,6 +134,15 @@ class TextureSkillPolicyTests(unittest.TestCase):
         ):
             self.assertIn(phrase, self.skill)
 
+    def test_contractflow_and_main_only_routing_are_explicit(self):
+        for phrase in (
+            "ContractFlow v1",
+            "accepts production only from `$fjzm`",
+            "never sends work directly to `$fjzm-model` or `$fjzm-animation`",
+            "geometry, base bone hierarchy, origins, and locators remain immutable",
+        ):
+            self.assertIn(phrase, self.skill)
+
 
 if __name__ == "__main__":
     unittest.main()

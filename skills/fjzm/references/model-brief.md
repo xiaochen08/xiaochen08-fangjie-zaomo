@@ -67,11 +67,34 @@ Do not create this production specification until the user has selected a concep
     "selected_variant": "A | B | C | approved_reference",
     "evidence": "verbatim user approval message"
   },
+  "contractflow": {
+    "protocol_version": "1.0",
+    "capability_index_path": "capability-index.json",
+    "pipeline_state_path": "pipeline-state.json",
+    "central_router": "fjzm",
+    "identity_lock": ["project_id", "asset_id", "asset_version"],
+    "max_internal_retries": 2,
+    "specialist_peer_to_peer": false
+  },
+  "model_workshop": {
+    "handoff_path": "model-handoff.json",
+    "result_path": "model-result.json | null",
+    "writer_skill": "fjzm-model",
+    "single_writer_surface": "geometry",
+    "geometry_blueprint_path": "geometry-blueprint.json",
+    "fidelity_report_path": "reference-fidelity-report.json | null",
+    "geometry_signature": null,
+    "rig_signature": null,
+    "status": "pending | passed | failed | blocked"
+  },
   "image_production": {
     "index_path": "design/image-production-index.json",
     "status": "queued | active | final_visual_lock",
-    "overview_round": "round-001",
-    "theme_round": "round-002",
+    "asset_scope_confirmation_path": "design/asset-scope-confirmation.json",
+    "asset_scope_confirmation_status": "explicitly_confirmed",
+    "first_choice_round": "round-001",
+    "first_choice_generation_mode": "three_separate_calls",
+    "first_choice_variants": ["A", "B", "C"],
     "theme_approval_evidence": null,
     "required_model_views": ["front", "back", "left", "right", "top", "bottom", "three_quarter"],
     "required_action_sheets": [],
@@ -198,7 +221,7 @@ When sound is required or audio is attached, read `audio-system.md`; inventory u
 
 For every player-facing Mod asset, read `asset-presentation.md`; create an identity-scoped `asset-presentation.json` with localized display name, gray italic Mod name, factual usage line, approved themed flavor pool, stable selection rule, presentation surfaces, layout tokens, and GUI-scale evidence. Run `scripts/validate_asset_presentation.py`. Do not bake final localized text into a texture.
 
-For every image-producing project, read `image-production-system.md`; keep `image_production` synchronized with the persistent project index. Do not infer that an overview, theme, individual asset, GUI, or action approval authorizes another round.
+For every image-producing project, read `image-production-system.md`; keep `image_production` synchronized with the persistent project index. Asset scope is confirmed in text and the first image round is the complete three-call A/B/C choice batch. Do not infer that a theme, individual asset, GUI, or action approval authorizes another round.
 
 Always read `shader-compatibility.md` before concepts. Record the user's no-shader fallback, Iris/OptiFine or other loader, exact named shader-pack versions, PBR material convention, emissive/world-light ownership, transparency/render layer, target hardware, and evidence expectations. After concept approval, create and validate `shader-contract.json` before detailed texturing. Never convert an unresolved target into a universal compatibility claim.
 

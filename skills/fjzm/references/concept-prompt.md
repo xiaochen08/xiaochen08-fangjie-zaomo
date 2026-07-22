@@ -19,6 +19,10 @@ Do not include an unapproved related asset in a manifest or image. For an approv
 
 Every A/B/C package must visibly demonstrate all approved requirements. Each package contains a primary model sheet, a related-asset sheet when companions are approved, and a damage/destruction keyframe sheet when staged damage or full destruction is approved. Generate required sheets separately when a combined sheet would reduce readable detail. Do not replace a required visual sheet with text. An explicitly approved single, non-destructible asset needs only the primary sheet.
 
+For the first visual choice, run **exactly three separate imagegen calls**: one for A, one for B, and one for C. Reuse the same frozen scope, quality target, texture tier, camera contract, and completeness checklist in all three calls. Every candidate must meet the **same quality floor** before the user sees any of them. **No sacrificial option** is allowed: never weaken one candidate with reduced detail, missing assets, worse composition, lower texture quality, generic construction, or an obvious mistake to make another candidate look preferable. Every direction must be a serious design that could be selected and built.
+
+A, B, and C must differ through legitimate Blockbench-feasible design decisions such as silhouette, proportion system, part construction, material distribution, or thematic mechanism. A candidate is **not merely a recolor** of another. Do not show Variant A early, do not call a first image a test/overview/non-choice preview, and do not ask for selection until all three audited candidates are ready. If one candidate fails, regenerate that candidate alone and keep the passed candidates unchanged.
+
 After theme selection, use `image-production-system.md` to create the complete view matrix and one action/keyframe sheet for every approved animation. Concept A/B/C may use compact comparable sheets, but the final build reference may not omit hidden sides or motion keys.
 
 ## Master image prompt
@@ -57,7 +61,7 @@ BLOCKBENCH-LIKE PRESENTATION
 Use neutral studio lighting, restrained ambient occlusion, crisp hard-surface shading, a plain dark checker or neutral viewport background, and unobstructed full-body framing. Render pixel textures sharply without antialiasing blur. Use no cinematic perspective, no depth of field, no bloom, no particles, no motion blur, no fog, no dramatic rim light, no photorealistic PBR reflections, and no environment scenery. Emissive areas may be flat bright pixel regions without glow spill. All runtime-only effects are excluded from the model sheet and described separately in text; runtime lighting is not proof of compatibility until the exact model is tested in-game.
 
 OUTPUT DISCIPLINE
-Generate each variant as a separate image package; generate each required sheet as a separate image using identical design, scale, and lighting. Keep the primary sheet in neutral idle; use aligned readable keyframes on action and damage/destruction sheets. Keep GUI previews in separate GUI rounds. Do not embed A/B/C labels or any text, dimensions, arrows, UI, watermark, or logo inside model images.
+Generate each variant as a separate image package through its own imagegen call; generate each required sheet as a separate image using identical design, scale, and lighting. Keep the primary sheet in neutral idle; use aligned readable keyframes on action and damage/destruction sheets. Keep GUI previews in separate GUI rounds. Do not embed A/B/C labels or any text, dimensions, arrows, UI, watermark, or logo inside model images.
 ```
 
 ## Negative prompt
@@ -68,7 +72,7 @@ cinematic concept art, realistic creature, smooth sculpture, rounded organic ana
 
 ## Audit before showing the user
 
-Inspect each generated image against its manifest. Reject it if views disagree, a visible part has no cuboid mapping, the texture looks smoother than the chosen density, painted-in directional highlights or shadows would create double lighting, effects conceal geometry, or the silhouette cannot be built at the declared scale. Fix the prompt and regenerate the preview before showing it. Present A/B/C as conversation labels outside the images, plus each variant's manifest and known limitations.
+Inspect each generated image against its manifest. Reject it if views disagree, a visible part has no cuboid mapping, the texture looks smoother than the chosen density, painted-in directional highlights or shadows would create double lighting, effects conceal geometry, the silhouette cannot be built at the declared scale, or its quality/completeness is below the other candidates. Fix the prompt and regenerate only that preview before showing the set. Present A/B/C as conversation labels outside the images, plus each variant's manifest and known limitations.
 
 Present the generated packages to the user in A, then B, then C order. Under each package, show every required image followed by a requirements-to-image checklist mapping the primary asset, each approved related asset, and each damage/destruction stage to a visible sheet. State excluded runtime-only effects separately; ask the user to select or revise only after all required images are visible.
 

@@ -18,7 +18,7 @@ if ($destination.TrimEnd('\') -eq $destinationDriveRoot) {
     throw "DestinationRoot cannot be a drive root: $destination"
 }
 
-$skillNames = @('fjzm', 'fjzm-animation', 'fjzm-texture')
+$skillNames = @('fjzm', 'fjzm-model', 'fjzm-texture', 'fjzm-animation')
 $sourcePaths = @{}
 $targetPaths = @{}
 foreach ($name in $skillNames) {
@@ -33,20 +33,16 @@ foreach ($name in $skillNames) {
 }
 
 $existing = @($skillNames | Where-Object { Test-Path -LiteralPath $targetPaths[$_] -PathType Container })
-$legacyPair = $existing.Count -eq 2 -and $existing -contains 'fjzm' -and $existing -contains 'fjzm-animation' -and $existing -notcontains 'fjzm-texture'
-$completeV4 = $existing.Count -eq 3
+$legacyV3 = $existing.Count -eq 2 -and $existing -contains 'fjzm' -and $existing -contains 'fjzm-animation'
+$legacyV4 = $existing.Count -eq 3 -and $existing -contains 'fjzm' -and $existing -contains 'fjzm-texture' -and $existing -contains 'fjzm-animation'
+$completeV5 = $existing.Count -eq 4
 
-if ($legacyPair) {
-    Write-Host 'Legacy v3 pair detected: fjzm + fjzm-animation.'
+if ($existing.Count -ne 0 -and -not ($legacyV3 -or $legacyV4 -or $completeV5)) {
+    throw "Refusing partial suite installation. Found: $($existing -join ', '). Expected none, a recognized v3/v4 installation, or all four v5 skills."
 }
-elseif ($existing.Count -ne 0 -and -not $completeV4) {
-    throw "Refusing partial suite installation. Found: $($existing -join ', '). Expected none, the legacy v3 pair, or all three v4 skills."
+if ($existing.Count -gt 0 -and -not $BackupAndReplace) {
+    throw 'Existing FJZM installation detected. Re-run with -BackupAndReplace to back it up and install all four v5 skills together.'
 }
-
-if (($legacyPair -or $completeV4) -and -not $BackupAndReplace) {
-    throw 'Existing FJZM installation detected. Re-run with -BackupAndReplace to back it up and install all three v4 skills together.'
-}
-
 if (-not (Test-Path -LiteralPath $destination -PathType Container)) {
     New-Item -ItemType Directory -Path $destination | Out-Null
 }
@@ -84,14 +80,14 @@ try {
     }
     Remove-Item -LiteralPath $stage
 
-    Write-Host 'Installed FJZM suite 4.2.0:'
+    Write-Host 'Installed FJZM suite 5.2.0:'
     foreach ($name in $skillNames) {
         Write-Host "  $($targetPaths[$name])"
     }
     if ($backup) {
         Write-Host "Previous suite backup: $backup"
     }
-    Write-Host 'Restart Codex or start a new task before invoking $fjzm, $fjzm-texture, or $fjzm-animation.'
+    Write-Host 'Restart Codex or start a new task before invoking $fjzm and its three specialist skills.'
 }
 catch {
     foreach ($name in $activated) {

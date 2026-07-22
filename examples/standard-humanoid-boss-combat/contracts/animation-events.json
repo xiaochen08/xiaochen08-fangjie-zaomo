@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "project_id": "fjzm_examples",
+  "asset_id": "iron_vanguard_boss",
+  "asset_version": "1.0.0",
+  "model_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "rig_signature": "rig-iron-vanguard-humanoid-v1",
+  "events": [
+    {"event_id": "event.hitbox_on", "owner": "server"},
+    {"event_id": "event.hitbox_off", "owner": "server"},
+    {"event_id": "event.blade_whoosh", "owner": "presentation"},
+    {"event_id": "event.heavy_step", "owner": "presentation"},
+    {"event_id": "event.ground_impact", "owner": "server"},
+    {"event_id": "event.combat_cleanup", "owner": "server"}
+  ]
+}

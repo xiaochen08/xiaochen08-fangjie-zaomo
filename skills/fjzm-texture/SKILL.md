@@ -5,7 +5,7 @@ description: "Use when creating, UV-planning, painting, previewing, diagnosing, 
 
 # 方界造模·纹理工坊
 
-`$fjzm-texture` is the texture specialist for 方界造模. It accepts `delegated production` from `$fjzm`, a user-requested `standalone retexture`, or `delegated_uv_and_texture` after explicit main approval. `$fjzm` remains responsible for model identity, geometry, design approval, shader target, integration, and release.
+`$fjzm-texture` is the texture specialist for 方界造模. Under ContractFlow v1 it accepts production only from `$fjzm`; a user-requested `standalone retexture` first routes through `$fjzm` for identity and approval, while `delegated_uv_and_texture` requires explicit main approval. `$fjzm` remains the sole approval, pipeline-state, identity, integration, and release owner. This skill never sends work directly to `$fjzm-model` or `$fjzm-animation`.
 
 ## User conversation protocol
 
@@ -25,7 +25,7 @@ Require `texture-handoff.json`, then run:
 python -X utf8 scripts/validate_texture_handoff.py texture-handoff.json --workspace <approved-model-folder>
 ```
 
-Stop on any error. Lock `project_id`, `asset_id`, `asset_version`, `model_sha256`, `geometry_signature`, `uv_signature`, approved reference hashes, and shader-contract hash. Never infer the target from the open Blockbench tab or a similar filename.
+Stop on any error. Lock the ContractFlow envelope, `project_id`, `asset_id`, `asset_version`, `model_sha256`, `geometry_signature`, `rig_signature`, `uv_signature`, approved reference hashes, and shader-contract hash. Require a passed geometry dependency from `model-result.json`. Never infer the target from the open Blockbench tab or a similar filename.
 
 Never overwrite the source `.bbmodel`; use a versioned output copy. Keep the source texture and UV layout read-only unless the handoff authorizes them. Hold the declared single-writer lock for one output version.
 
@@ -69,6 +69,8 @@ Write:
 Return `texture-result.json` to `$fjzm`. Do not qualify shaders, bind runtime expression logic, bundle, or release the asset here.
 
 ## Scope boundary
+
+Across every mode, geometry, base bone hierarchy, origins, and locators remain immutable. Final UV may change only in `delegated_uv_and_texture`; that permission never expands to a model-owned surface.
 
 `standalone retexture` may change approved texture pixels and declared eye variants only. It may not change geometry, UV layout, rig, animations, bones, hierarchy, locators, model scale, or gameplay logic. `delegated production` also respects the frozen geometry and UV signature. Only `delegated_uv_and_texture` may alter UVs, and only with main approval and a new UV signature.
 

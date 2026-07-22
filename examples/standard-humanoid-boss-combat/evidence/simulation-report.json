@@ -1,0 +1,447 @@
+{
+  "schema_version": 1,
+  "project_id": "fjzm_examples",
+  "asset_id": "iron_vanguard_boss",
+  "asset_version": "1.0.0",
+  "implementation_status": "contract_simulated",
+  "runtime_verified": false,
+  "cycles": 2000,
+  "checks": {
+    "range_and_phase_filters": true,
+    "fallback_on_invalid_target": true,
+    "deterministic_selection": true,
+    "repetition_penalty": true,
+    "all_series_selected": true,
+    "hit_and_whiff_branches": true,
+    "interrupt_cleanup": true,
+    "terminal_interrupt_priority": true
+  },
+  "selection_counts": {
+    "close_combo_a": 100,
+    "close_spin_finisher": 56,
+    "mid_gap_close": 84,
+    "far_leap": 42
+  },
+  "fallback_count": 1718,
+  "immediate_repeat_count": 0,
+  "branch_checks": {
+    "hit": 6,
+    "whiff": 6
+  },
+  "interrupt_checks": {
+    "hurt": {
+      "reason": "hurt",
+      "priority_index": 5,
+      "cleanup_event_ids": [
+        "event.hitbox_off",
+        "event.combat_cleanup"
+      ]
+    },
+    "stun": {
+      "reason": "stun",
+      "priority_index": 4,
+      "cleanup_event_ids": [
+        "event.hitbox_off",
+        "event.combat_cleanup"
+      ]
+    },
+    "knockdown": {
+      "reason": "knockdown",
+      "priority_index": 3,
+      "cleanup_event_ids": [
+        "event.hitbox_off",
+        "event.combat_cleanup"
+      ]
+    },
+    "target_lost": {
+      "reason": "target_lost",
+      "priority_index": 6,
+      "cleanup_event_ids": [
+        "event.hitbox_off",
+        "event.combat_cleanup"
+      ]
+    },
+    "phase_change": {
+      "reason": "phase_change",
+      "priority_index": 2,
+      "cleanup_event_ids": [
+        "event.hitbox_off",
+        "event.combat_cleanup"
+      ]
+    },
+    "death": {
+      "reason": "death",
+      "priority_index": 0,
+      "cleanup_event_ids": [
+        "event.hitbox_off",
+        "event.combat_cleanup"
+      ]
+    },
+    "unload": {
+      "reason": "unload",
+      "priority_index": 1,
+      "cleanup_event_ids": [
+        "event.hitbox_off",
+        "event.combat_cleanup"
+      ]
+    }
+  },
+  "sample_traces": [
+    {
+      "cycle": 0,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 0,
+        "health_ratio": 0.8,
+        "distance": 2.0
+      },
+      "selection": {
+        "fallback": false,
+        "series_id": "close_combo_a",
+        "action_id": "animation.iron_vanguard.slash_left",
+        "eligible_series": [
+          "close_combo_a"
+        ],
+        "weights": {
+          "close_combo_a": 60.0
+        },
+        "seed": 11846103720042034429
+      }
+    },
+    {
+      "cycle": 1,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 1,
+        "health_ratio": 0.3,
+        "distance": 2.0
+      },
+      "selection": {
+        "fallback": false,
+        "series_id": "close_spin_finisher",
+        "action_id": "animation.iron_vanguard.spin",
+        "eligible_series": [
+          "close_spin_finisher"
+        ],
+        "weights": {
+          "close_spin_finisher": 34.0
+        },
+        "seed": 15112689528505305819
+      }
+    },
+    {
+      "cycle": 2,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 2,
+        "health_ratio": 0.8,
+        "distance": 4.0
+      },
+      "selection": {
+        "fallback": false,
+        "series_id": "mid_gap_close",
+        "action_id": "animation.iron_vanguard.gap_close",
+        "eligible_series": [
+          "mid_gap_close"
+        ],
+        "weights": {
+          "mid_gap_close": 48.0
+        },
+        "seed": 13389675070283108274
+      }
+    },
+    {
+      "cycle": 3,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 3,
+        "health_ratio": 0.3,
+        "distance": 7.0
+      },
+      "selection": {
+        "fallback": false,
+        "series_id": "far_leap",
+        "action_id": "animation.iron_vanguard.leap",
+        "eligible_series": [
+          "far_leap"
+        ],
+        "weights": {
+          "far_leap": 26.0
+        },
+        "seed": 9453601266482602130
+      }
+    },
+    {
+      "cycle": 4,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 4,
+        "health_ratio": 0.8,
+        "distance": 2.0
+      },
+      "selection": {
+        "fallback": true,
+        "series_id": null,
+        "action_id": "animation.iron_vanguard.guard",
+        "eligible_series": [],
+        "weights": {},
+        "seed": 1391765302325240509
+      }
+    },
+    {
+      "cycle": 5,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 5,
+        "health_ratio": 0.3,
+        "distance": 2.0
+      },
+      "selection": {
+        "fallback": true,
+        "series_id": null,
+        "action_id": "animation.iron_vanguard.guard",
+        "eligible_series": [],
+        "weights": {},
+        "seed": 7247859614984970133
+      }
+    },
+    {
+      "cycle": 6,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 6,
+        "health_ratio": 0.8,
+        "distance": 4.0
+      },
+      "selection": {
+        "fallback": true,
+        "series_id": null,
+        "action_id": "animation.iron_vanguard.guard",
+        "eligible_series": [],
+        "weights": {},
+        "seed": 4349981336011871462
+      }
+    },
+    {
+      "cycle": 7,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 7,
+        "health_ratio": 0.3,
+        "distance": 7.0
+      },
+      "selection": {
+        "fallback": true,
+        "series_id": null,
+        "action_id": "animation.iron_vanguard.guard",
+        "eligible_series": [],
+        "weights": {},
+        "seed": 7099457745787537214
+      }
+    },
+    {
+      "cycle": 8,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 8,
+        "health_ratio": 0.8,
+        "distance": 2.0
+      },
+      "selection": {
+        "fallback": true,
+        "series_id": null,
+        "action_id": "animation.iron_vanguard.guard",
+        "eligible_series": [],
+        "weights": {},
+        "seed": 5969548840748152195
+      }
+    },
+    {
+      "cycle": 9,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 9,
+        "health_ratio": 0.3,
+        "distance": 2.0
+      },
+      "selection": {
+        "fallback": true,
+        "series_id": null,
+        "action_id": "animation.iron_vanguard.guard",
+        "eligible_series": [],
+        "weights": {},
+        "seed": 5599379982669805639
+      }
+    },
+    {
+      "cycle": 10,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 10,
+        "health_ratio": 0.8,
+        "distance": 4.0
+      },
+      "selection": {
+        "fallback": true,
+        "series_id": null,
+        "action_id": "animation.iron_vanguard.guard",
+        "eligible_series": [],
+        "weights": {},
+        "seed": 2809781391984957050
+      }
+    },
+    {
+      "cycle": 11,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 11,
+        "health_ratio": 0.3,
+        "distance": 7.0
+      },
+      "selection": {
+        "fallback": true,
+        "series_id": null,
+        "action_id": "animation.iron_vanguard.guard",
+        "eligible_series": [],
+        "weights": {},
+        "seed": 8113900397423356324
+      }
+    },
+    {
+      "cycle": 12,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 12,
+        "health_ratio": 0.8,
+        "distance": 2.0
+      },
+      "selection": {
+        "fallback": true,
+        "series_id": null,
+        "action_id": "animation.iron_vanguard.guard",
+        "eligible_series": [],
+        "weights": {},
+        "seed": 1752411360863244245
+      }
+    },
+    {
+      "cycle": 13,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 13,
+        "health_ratio": 0.3,
+        "distance": 2.0
+      },
+      "selection": {
+        "fallback": true,
+        "series_id": null,
+        "action_id": "animation.iron_vanguard.guard",
+        "eligible_series": [],
+        "weights": {},
+        "seed": 16716155270511735015
+      }
+    },
+    {
+      "cycle": 14,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 14,
+        "health_ratio": 0.8,
+        "distance": 4.0
+      },
+      "selection": {
+        "fallback": true,
+        "series_id": null,
+        "action_id": "animation.iron_vanguard.guard",
+        "eligible_series": [],
+        "weights": {},
+        "seed": 6613596874126537935
+      }
+    },
+    {
+      "cycle": 15,
+      "state": {
+        "entity_id": "iron-vanguard-acceptance",
+        "weapon_profile_id": "greatsword_two_hand",
+        "eye_height": 0.0,
+        "grounded": true,
+        "line_of_sight": true,
+        "combat_cycle": 15,
+        "health_ratio": 0.3,
+        "distance": 7.0
+      },
+      "selection": {
+        "fallback": true,
+        "series_id": null,
+        "action_id": "animation.iron_vanguard.guard",
+        "eligible_series": [],
+        "weights": {},
+        "seed": 745248056581727143
+      }
+    }
+  ],
+  "limitations": [
+    "No .blend or .bbmodel action curves were rendered in this simulation.",
+    "No Minecraft, Epic Fight, hitbox, networking, save/reload, audio, or particle runtime was executed."
+  ]
+}

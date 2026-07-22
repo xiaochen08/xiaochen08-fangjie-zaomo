@@ -9,8 +9,9 @@
 - Pass the red host UTF-8 gate before the Mod shell and the red project UTF-8 gate before any custom source or resource.
 - Complete the requirements brief through separate single-decision turns before generating a new design.
 - Present a tailored related-asset list; record single versus approved-set scope and a separate decision for every suggested companion.
-- For multi-asset scope, archive and show the full asset overview before any per-asset detail round.
-- Generate three clearly labeled, Blockbench-feasible concept previews with comparable views, obtain the theme lock, then continue the indexed per-asset rounds.
+- Confirm multi-asset scope in a text-only manifest; do not generate or show an asset-overview image.
+- Make the first user-visible image batch the three clearly labeled, Blockbench-feasible A/B/C concept previews. Generate them with exactly three separate imagegen calls and show no partial batch.
+- Hold A, B, and C to the same quality floor. Reject recolors, reduced-detail filler, missing-scope variants, and sacrificial options; regenerate a failed candidate before display.
 - Require the final model reference package to include front, back, left, right, top, bottom, three-quarter, and every approved action/keyframe sheet with identical geometry and texture.
 - Store every prompt, negative prompt, manifest, image, review, approval, and SHA-256 under immutable `design/image-rounds/`; resume from `design/image-production-index.json` instead of restarting.
 - Run `scripts/validate_image_production_index.py`; a broken round ID, dependency, path, hash, or approval record blocks image continuation and delivery.
@@ -38,10 +39,13 @@ Pass when the silhouette, proportions, signature parts, palette, and Minecraft f
 
 ## Gate 2: geometry graybox
 
+This is the geometry graybox checkpoint. Delegate through ContractFlow v1 to `$fjzm-model`, require a passing `model-result.json`, and bind all evidence to the model/reference hashes.
+
 - Use separate groups for every independently moving assembly.
 - Place origins at physical joints or declared external pivots before adding detail.
 - For animated models, approve the rig hierarchy, default pose, sockets, root-motion policy, state graph, and highest-risk motion grayboxes.
-- Reopen the saved graybox in actual Blockbench; capture front, side, back, top, and three-quarter views at matched scale and neutral lighting.
+- Reopen the saved graybox in actual Blockbench; the legacy minimum was front, side, back, top, and three-quarter. The v5 gate expands this to one summary board plus separate front, back, left, right, top, bottom, three-quarter, and gameplay-distance views at matched scale and neutral lighting. Include a 50% transparent overlay for comparable views.
+- Apply the balanced fidelity limits: blocking anchors: 100%; main proportion error: at most 5%; key-part position error: at most 0.5 Blockbench units; symmetric-part error: at most 0.25 Blockbench units; rotation error: at most 3 degrees; declared clearance passes; no missing approved parts, unapproved parts, unintended intersections, floating parts, wrong groups, or identity mismatch.
 - Match the concept sheet's scale, part inventory, proportions, and camera views; document any unavoidable deviation and request approval before continuing.
 - Check static intersections, floating pieces, coplanar faces, excessive cube count, and scale.
 - Present the actual Blockbench graybox views and a reference-anchor checklist to the user. Record explicit user graybox approval naming the accepted version and deviations. Silence is not graybox approval.
@@ -68,6 +72,8 @@ Pass before material polish.
 
 ## Gate 4: texture and detail
 
+This is the textured final checkpoint. Compare the actual saved Blockbench result against the approved reference using the same eight-view and overlay evidence set before user approval.
+
 `fjzm` remains the texture approval owner and integration owner. `$fjzm-texture` is the single texture writer for one identity-locked, versioned output. Create `texture-handoff.json`, lock `project_id`, `asset_id`, `asset_version`, `model_sha256`, `geometry_signature`, `uv_signature`, approved reference hashes, and shader-contract hash, then run `fjzm-texture/scripts/validate_texture_handoff.py`.
 
 The specialist must return to `$fjzm` with `texture-result.json`, `texture-spec.json`, `reference-fidelity-report.json`, texture maps, and actual Blockbench evidence. Do not qualify shaders, bundle, or release the asset before the texture result returns. Geometry, rig, animation, locator, or unapproved UV changes must stop and reopen the owning gate.
@@ -86,6 +92,8 @@ For detailed/ultra tiers, require consistent texel density, efficient UV use, re
 Pass only after the user gives explicit texture-preview approval for the actual Blockbench result and detail improves readability without destroying the Minecraft form language.
 
 ## Gate 5: actual Blockbench evidence
+
+The animation movement checkpoint compares each planned key pose, actual Blockbench pose, and overlay. Sample every 0.05 seconds or more densely for fast/narrow motion; validate direction, phase, clearance, loop seam, cooldown, return pose, and actual movement rather than keyframe presence alone.
 
 - Reopen the saved `.bbmodel`; do not rely on the generator's in-memory representation.
 - Play every animation at normal speed and inspect critical frames from multiple views.
@@ -106,6 +114,8 @@ Pass only after the user gives explicit texture-preview approval for the actual 
 Pass only when structural checks, visual checks, and user-visible previews agree.
 
 ## Gate 6: release qualification
+
+The Minecraft runtime checkpoint must exercise the exact exported asset in the authorized target project: scale/render/collision, state transitions, particles, projectile, audio, damage/destruction, unload/reload, and multiplayer. Run the mandatory no-shader baseline first, then one exact user-named shader pack/version/loader/preset. Never claim universal shader compatibility.
 
 - Read `release-qualification.md` and label each target runtime as verified, compatible, or experimental from actual evidence.
 - Read `runtime-delivery.md`; create the unverified scaffold, attach exact project/build/Blockbench/E2E evidence, then run `scripts/validate_release_evidence.py`.

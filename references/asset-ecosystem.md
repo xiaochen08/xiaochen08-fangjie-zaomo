@@ -50,10 +50,11 @@ Before image generation, show the user a confirmation table containing:
 | approved related assets | Exact list, relationships, and relative scale |
 | declined/deferred suggestions | Listed as excluded from images |
 | damage/destruction scope | Not applicable, impact-only, staged damage, or full destruction plus states and terminal route |
-| required image rounds | Full asset overview, primary A/B/C theme, per-asset details, complete model views, action/keyframes, GUI themes/details, damage/destruction, and optional effects as applicable |
+| first image choice | Three separately generated A/B/C options shown together; no asset-overview or preliminary single image |
+| later image rounds | Per-asset details, complete model views, action/keyframes, GUI themes/details, damage/destruction, and optional effects as applicable |
 | asset presentation | Required surfaces, display name, gray italic Mod name, usage line, flavor tone, and localization status |
 
-Wait for confirmation or correction. “No related assets” and “non-destructible/not applicable” are valid only when explicitly answered not applicable; never infer them from silence. Freeze the table as the image-generation scope and inject its approved values into every A/B/C prompt. Any correction reopens this gate before regeneration.
+Wait for confirmation or correction. This is a text-only scope gate, not an image-generation round. “No related assets” and “non-destructible/not applicable” are valid only when explicitly answered not applicable; never infer them from silence. Freeze the table as the image-generation scope and inject its approved values into every A/B/C prompt. The first generated images must be the complete three-choice batch. Any correction reopens this gate before regeneration.
 
 ## Concept boundary
 

@@ -7,7 +7,10 @@ SKILL = ROOT / "SKILL.md"
 AGENT = ROOT / "agents" / "openai.yaml"
 HANDOFF = ROOT / "references" / "animation-handoff.md"
 REVISION = ROOT / "references" / "animation-revision.md"
+BLENDER = ROOT / "references" / "blender-epicfight-backend.md"
+COMBAT = ROOT / "references" / "combat-behavior-orchestration.md"
 VALIDATOR = ROOT / "scripts" / "validate_animation_handoff.py"
+COMBAT_VALIDATOR = ROOT / "scripts" / "validate_combat_behavior.py"
 
 
 class AnimationSkillPolicyTests(unittest.TestCase):
@@ -17,6 +20,8 @@ class AnimationSkillPolicyTests(unittest.TestCase):
         cls.agent = AGENT.read_text(encoding="utf-8")
         cls.handoff = HANDOFF.read_text(encoding="utf-8") if HANDOFF.exists() else ""
         cls.revision = REVISION.read_text(encoding="utf-8") if REVISION.exists() else ""
+        cls.blender = BLENDER.read_text(encoding="utf-8") if BLENDER.exists() else ""
+        cls.combat = COMBAT.read_text(encoding="utf-8") if COMBAT.exists() else ""
 
     def test_official_identity_and_call_name(self):
         self.assertIn("name: fjzm-animation", self.skill)
@@ -67,11 +72,91 @@ class AnimationSkillPolicyTests(unittest.TestCase):
         self.assertIn("0.05 seconds", self.skill)
         self.assertIn("loop seam", self.skill)
 
+    def test_animation_workshop_contains_two_internal_backends(self):
+        self.assertIn("Blockbench backend", self.skill)
+        self.assertIn("Blender / Epic Fight backend", self.skill)
+        self.assertIn("Do not create a separate user-facing Blender skill", self.skill)
+        self.assertIn("animation_backend", self.skill)
+
+    def test_blender_backend_is_loaded_only_when_selected(self):
+        self.assertTrue(BLENDER.exists())
+        self.assertIn("Read [blender-epicfight-backend.md](references/blender-epicfight-backend.md)", self.skill)
+        for phrase in (
+            "Blender Python",
+            "Epic Fight",
+            "rig-map.json",
+            "action-library.json",
+            "actual Blender",
+            "actual target runtime",
+        ):
+            self.assertIn(phrase, self.skill + self.blender)
+
+    def test_blender_route_locks_versions_and_ascii_export_ids(self):
+        for phrase in (
+            "minecraft_version",
+            "loader_version",
+            "animation_runtime_version",
+            "blender_version",
+            "exporter_version",
+            "official source",
+            "ASCII",
+        ):
+            self.assertIn(phrase, self.blender)
+
+    def test_blender_route_never_claims_runtime_from_authoring_preview(self):
+        self.assertIn("Blender preview is not runtime proof", self.blender)
+        self.assertIn("runtime_review: required", self.blender)
+
     def test_machine_validator_and_return_contract_are_required(self):
         self.assertTrue(VALIDATOR.exists())
         self.assertIn("validate_animation_handoff.py", self.skill)
         for phrase in ("animation-system.json", "animation-events.json", "animation-result.json"):
             self.assertIn(phrase, self.skill)
+
+    def test_contractflow_main_only_routing_and_model_immutability_are_explicit(self):
+        for phrase in (
+            "ContractFlow v1",
+            "accepts production only from `$fjzm`",
+            "never sends work directly to `$fjzm-model` or `$fjzm-texture`",
+            "geometry, UV, base bone hierarchy, bone names, origins, and locators are immutable",
+        ):
+            self.assertIn(phrase, self.skill)
+
+    def test_combat_motion_loads_the_behavior_orchestration_contract(self):
+        self.assertTrue(COMBAT.exists())
+        self.assertTrue(COMBAT_VALIDATOR.exists())
+        self.assertIn("motion_domain", self.skill)
+        self.assertIn("Read [combat-behavior-orchestration.md](references/combat-behavior-orchestration.md)", self.skill)
+        self.assertIn("validate_combat_behavior.py", self.skill)
+        self.assertIn("combat-behavior-system.json", self.skill)
+
+    def test_combat_orchestration_covers_observable_high_quality_patterns(self):
+        for phrase in (
+            "weapon category and style",
+            "distance and eye-height",
+            "weighted selection",
+            "repetition penalty",
+            "hit and whiff",
+            "interrupt",
+            "long combo",
+            "play_speed",
+            "phase transition",
+            "runtime evidence",
+        ):
+            self.assertIn(phrase, self.combat)
+
+    def test_combat_reference_forbids_copying_third_party_animation_assets(self):
+        for phrase in (
+            "Do not copy",
+            "third-party animation files",
+            "original key poses",
+            "original timing",
+        ):
+            self.assertIn(phrase, self.combat)
+
+    def test_animation_workshop_authors_contract_but_main_owns_runtime_ai(self):
+        self.assertIn("`$fjzm` owns runtime AI", self.combat)
+        self.assertIn("does not write gameplay AI", self.combat)
 
 
 if __name__ == "__main__":

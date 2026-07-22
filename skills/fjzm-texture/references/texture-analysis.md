@@ -45,6 +45,6 @@ If an eye, ear, muzzle, armor plate, buckle, bag, weapon, or silhouette feature 
 
 ## Handoff identity
 
-`texture-handoff.json` locks `project_id`, `asset_id`, `asset_version`, `model_sha256`, `model_spec_sha256`, `geometry_signature`, `uv_signature`, approved reference hashes, and `shader-contract.json` hash. The source is read-only and `$fjzm-texture` is the single writer for one versioned output.
+`texture-handoff.json` uses ContractFlow v1 and routes only from `$fjzm`. It locks `project_id`, `asset_id`, `asset_version`, `model_sha256`, `model_spec_sha256`, `geometry_signature`, `rig_signature`, `uv_signature`, approved reference hashes, and `shader-contract.json` hash. The source is read-only and `$fjzm-texture` is the single writer for one versioned output. Geometry, base bones, origins, and locators are immutable; only `delegated_uv_and_texture` may replace the final UV contract.
 
 The handoff also records allowed and protected mutations, both approvals, atlas, density, material library, UV plan, eye system, output paths, and return-contract path.

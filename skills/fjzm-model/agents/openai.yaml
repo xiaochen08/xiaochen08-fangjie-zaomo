@@ -1,0 +1,4 @@
+interface:
+  display_name: "方界造模·模型工坊"
+  short_description: "专门还原 Blockbench 几何、骨骼接口与结构精度。"
+  default_prompt: "使用 $fjzm-model 接收 $fjzm 的已批准合同，生成高还原 Blockbench 几何并返回可验证结果。"

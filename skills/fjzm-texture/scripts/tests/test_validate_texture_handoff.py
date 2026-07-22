@@ -38,6 +38,17 @@ class TextureHandoffValidatorTests(unittest.TestCase):
         self.shader = self.root / "shader-contract.json"
         self.shader.write_text('{"support_claim":"baseline_only"}', encoding="utf-8")
         self.payload = {
+            "protocol_version": "1.0",
+            "message_type": "handoff",
+            "message_id": "msg-texture-001",
+            "correlation_id": "corr-traveler-cat-001",
+            "from_skill": "fjzm",
+            "to_skill": "fjzm-texture",
+            "stage": "texture",
+            "idempotency_key": "travelers:traveler_cat:4.0.0:texture:0",
+            "attempt": 0,
+            "writer_lock": {"owner": "fjzm-texture", "surface": "texture", "output_version": "texture-r1"},
+            "dependencies": [{"stage": "geometry", "status": "passed"}],
             "schema_version": 1,
             "project_id": "travelers",
             "asset_id": "traveler_cat",
@@ -49,6 +60,7 @@ class TextureHandoffValidatorTests(unittest.TestCase):
                 "model_spec_path": "model-spec.json",
                 "model_spec_sha256": sha(self.spec),
                 "geometry_signature": "geometry-traveler-cat-v2",
+                "rig_signature": "rig-traveler-cat-v2",
                 "uv_signature": "uv-traveler-cat-v1",
                 "source_read_only": True,
             },
@@ -189,6 +201,33 @@ class TextureHandoffValidatorTests(unittest.TestCase):
         joined = "\n".join(result["errors"])
         for phrase in ("analysis_plan approval", "texture_production approval", "writer_skill", "single_writer", "must differ"):
             self.assertIn(phrase, joined)
+
+    def test_contractflow_requires_main_route_protocol_attempt_and_passed_geometry(self):
+        payload = deepcopy(self.payload)
+        payload["protocol_version"] = "2.0"
+        payload["from_skill"] = "fjzm-animation"
+        payload["attempt"] = 3
+        payload["dependencies"][0]["status"] = "failed"
+        result = load_module().validate_handoff(payload, self.root)
+        joined = "\n".join(result["errors"])
+        for phrase in ("protocol_version", "central", "attempt", "geometry dependency"):
+            self.assertIn(phrase, joined)
+
+    def test_geometry_and_rig_interfaces_are_always_immutable(self):
+        payload = deepcopy(self.payload)
+        payload["mode"] = "delegated_uv_and_texture"
+        payload["request"]["allowed_mutations"].extend(["geometry", "rig", "origins", "locators"])
+        payload["integration"]["main_change_approval"] = {"status": "approved", "evidence": "only UV approved"}
+        result = load_module().validate_handoff(payload, self.root)
+        joined = "\n".join(result["errors"])
+        for phrase in ("geometry", "rig", "origins", "locators"):
+            self.assertIn(phrase, joined)
+
+    def test_rig_signature_is_required_from_model_result(self):
+        payload = deepcopy(self.payload)
+        payload["source"]["rig_signature"] = ""
+        result = load_module().validate_handoff(payload, self.root)
+        self.assertIn("rig_signature", "\n".join(result["errors"]))
 
 
 if __name__ == "__main__":

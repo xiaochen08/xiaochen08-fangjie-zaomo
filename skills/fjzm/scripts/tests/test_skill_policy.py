@@ -33,6 +33,7 @@ UTF8_PREFLIGHT_VALIDATOR = Path(__file__).resolve().parents[1] / "validate_encod
 IMAGE_PRODUCTION = Path(__file__).resolve().parents[2] / "references" / "image-production-system.md"
 ASSET_PRESENTATION = Path(__file__).resolve().parents[2] / "references" / "asset-presentation.md"
 ASSET_PRESENTATION_VALIDATOR = Path(__file__).resolve().parents[1] / "validate_asset_presentation.py"
+COMBAT_RUNTIME_INTEGRATION = Path(__file__).resolve().parents[2] / "references" / "combat-runtime-integration.md"
 
 
 class OfficialIdentityPolicyTests(unittest.TestCase):
@@ -65,6 +66,7 @@ class AnimationSubskillBindingPolicyTests(unittest.TestCase):
         cls.skill = SKILL_MD.read_text(encoding="utf-8")
         cls.animation = ANIMATION_SYSTEM.read_text(encoding="utf-8")
         cls.brief = MODEL_BRIEF.read_text(encoding="utf-8")
+        cls.combat_runtime = COMBAT_RUNTIME_INTEGRATION.read_text(encoding="utf-8") if COMBAT_RUNTIME_INTEGRATION.exists() else ""
 
     def test_animation_requests_require_the_specialist_subskill(self):
         phrase = "**REQUIRED SUB-SKILL:** Use fjzm-animation"
@@ -98,6 +100,38 @@ class AnimationSubskillBindingPolicyTests(unittest.TestCase):
     def test_specialist_result_must_return_before_effect_binding(self):
         self.assertIn("animation-result.json", self.skill)
         self.assertIn("Do not bind particles, audio, hitboxes, or projectiles to a changed rig before the result returns", self.animation)
+
+    def test_combat_assets_require_validated_behavior_orchestration(self):
+        for phrase in (
+            "motion_domain: combat",
+            "combat-behavior-system.json",
+            "validate_combat_behavior.py",
+            "weapon profiles",
+            "distance and eye-height",
+            "weighted",
+            "hit and whiff",
+            "interrupt cleanup",
+        ):
+            self.assertIn(phrase, self.skill + self.animation)
+
+    def test_main_owns_runtime_combat_selection_and_gameplay_truth(self):
+        self.assertIn("`$fjzm` owns runtime combat selection", self.animation)
+        self.assertIn("server-authoritative", self.animation)
+
+    def test_main_loads_a_dedicated_combat_runtime_adapter_contract(self):
+        self.assertTrue(COMBAT_RUNTIME_INTEGRATION.exists())
+        self.assertIn("Read [combat-runtime-integration.md](references/combat-runtime-integration.md)", self.skill)
+        for phrase in (
+            "eligible_series",
+            "deterministic seed",
+            "action registration",
+            "server-authoritative",
+            "hit confirm",
+            "multiplayer",
+            "save and reload",
+            "implementation_status",
+        ):
+            self.assertIn(phrase, self.combat_runtime)
 
 
 class TextureSubskillBindingPolicyTests(unittest.TestCase):
@@ -458,13 +492,33 @@ class ImageProductionSystemPolicyTests(unittest.TestCase):
         cls.workspace = ASSET_WORKSPACE.read_text(encoding="utf-8")
         cls.dialogue = USER_DIALOGUE.read_text(encoding="utf-8")
 
-    def test_multi_asset_scope_starts_with_a_complete_asset_overview(self):
+    def test_asset_scope_is_confirmed_in_text_without_a_preview_image(self):
         for phrase in (
-            "full asset overview",
-            "primary model",
-            "approved related assets",
-            "GUI screens",
-            "before any per-asset detail round",
+            "text-only asset scope confirmation",
+            "Do not generate an asset-overview image",
+            "first user-visible image batch",
+            "A/B/C",
+        ):
+            self.assertIn(phrase, self.system)
+
+    def test_first_image_batch_is_exactly_three_separate_choice_calls(self):
+        for phrase in (
+            "exactly three separate imagegen calls",
+            "Variant A",
+            "Variant B",
+            "Variant C",
+            "Do not show a partial A/B/C batch",
+            "round-001__concept-choice",
+        ):
+            self.assertIn(phrase, self.system)
+
+    def test_three_choices_share_one_quality_floor_and_have_no_filler(self):
+        for phrase in (
+            "same quality floor",
+            "No sacrificial option",
+            "recolor",
+            "reduced detail",
+            "regenerate only the failed candidate before showing the batch",
         ):
             self.assertIn(phrase, self.system)
 
@@ -753,6 +807,16 @@ class ConceptPromptPolicyTests(unittest.TestCase):
     def test_prompt_generates_separate_unlabelled_variants(self):
         self.assertIn("Generate each variant as a separate image", self.prompt)
         self.assertIn("Do not embed A/B/C labels or any text", self.prompt)
+
+    def test_prompt_forbids_quality_sacrifice_and_partial_choice_batches(self):
+        for phrase in (
+            "exactly three separate imagegen calls",
+            "same quality floor",
+            "No sacrificial option",
+            "not merely a recolor",
+            "Do not show Variant A early",
+        ):
+            self.assertIn(phrase, self.prompt)
 
     def test_prompt_separates_runtime_effects_from_model_geometry(self):
         self.assertIn("runtime-only effects are excluded from the model sheet", self.prompt)
@@ -1576,6 +1640,62 @@ class ReleaseCandidatePolicyTests(unittest.TestCase):
             "Do not type version fields from memory",
         ):
             self.assertIn(phrase, self.runtime)
+
+
+class V5ModelWorkshopAndContractFlowPolicyTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.skill = SKILL_MD.read_text(encoding="utf-8")
+        cls.gates = QUALITY_GATES.read_text(encoding="utf-8")
+        cls.contractflow = (SKILL_MD.parent / "references" / "contractflow-protocol.md").read_text(encoding="utf-8")
+
+    def test_model_production_requires_model_workshop(self):
+        self.assertIn("**REQUIRED SUB-SKILL:** Use fjzm-model", self.skill)
+        self.assertIn("If `fjzm-model` is unavailable, stop geometry production", self.skill)
+
+    def test_main_is_the_only_router_and_approval_owner(self):
+        for phrase in (
+            "sole approval owner",
+            "specialists never send peer-to-peer handoffs",
+            "ContractFlow v1",
+            "capability-index.json",
+        ):
+            self.assertIn(phrase, self.skill + self.contractflow)
+
+    def test_model_result_precedes_texture_and_animation(self):
+        self.assertLess(self.skill.index("model-handoff.json"), self.skill.index("texture-handoff.json"))
+        self.assertLess(self.skill.index("model-result.json"), self.skill.index("texture-handoff.json"))
+        self.assertLess(self.skill.index("model-result.json"), self.skill.index("animation-handoff.json"))
+
+    def test_three_blockbench_checkpoints_and_runtime_checkpoint_are_required(self):
+        for phrase in (
+            "geometry graybox checkpoint",
+            "textured final checkpoint",
+            "animation movement checkpoint",
+            "Minecraft runtime checkpoint",
+        ):
+            self.assertIn(phrase, self.gates)
+
+    def test_fidelity_evidence_requires_views_overlay_hashes_and_thresholds(self):
+        for phrase in (
+            "front, back, left, right, top, bottom, three-quarter, and gameplay-distance",
+            "50% transparent overlay",
+            "blocking anchors: 100%",
+            "main proportion error: at most 5%",
+            "key-part position error: at most 0.5 Blockbench units",
+            "symmetric-part error: at most 0.25 Blockbench units",
+            "rotation error: at most 3 degrees",
+        ):
+            self.assertIn(phrase, self.gates)
+
+    def test_auto_repair_is_bounded_and_never_lowers_quality(self):
+        for phrase in (
+            "initial attempt plus at most two internal retries",
+            "Never lower the approved quality target",
+            "identity mismatch",
+            "preserve every attempt",
+        ):
+            self.assertIn(phrase, self.contractflow)
 
 
 if __name__ == "__main__":

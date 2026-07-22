@@ -1,4 +1,4 @@
 interface:
   display_name: "方界造模·动画工坊"
-  short_description: "专门生成、绑定、预览、诊断和优化 Blockbench 动画"
-  default_prompt: "使用 $fjzm-animation 优化这个 Minecraft Blockbench 模型的动画，只修改获批范围并保留可回退版本。"
+  short_description: "制作 Minecraft 动画、原创连段与可验证战斗编排"
+  default_prompt: "使用 $fjzm-animation 为已批准的 Minecraft 模型选择 Blockbench 或 Blender/Epic Fight 后端，制作原创动画；战斗资产同时生成并验证战斗导演合同。"
